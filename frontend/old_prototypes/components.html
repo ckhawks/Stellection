@@ -1,0 +1,73 @@
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/a87ee70882.js" crossorigin="anonymous"></script>
+
+    <link href="css/main.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+
+</head>
+
+<body class="d-flex flex-column">
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
+    </div>
+
+
+    <div class="btn-grou float-end">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-search"></i> Search
+        </button>
+        <div class="dropdown-menu pt-0 mx-0 rounded-3 shadow overflow-hidden" style="width: 280px;" id="collection-search">
+            <form class="p-2 mb-2 bg-light border-bottom" style="display:flex; flex-direction: row; align-items: center;">
+                <i class="fas fa-tags ms-1 me-2"></i> <input type="search" class="form-control" autocomplete="false" placeholder="Search collections...">
+            </form>
+            <ul class="list-unstyled mb-0">
+                <li>
+                    <div class="form-check dropdown-item d-flex align-items-center gap-2 py-2">
+                        <input class="ms-0 form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">memes</label>
+                    </div>
+                </li>
+                <li>
+                    <div class="form-check dropdown-item d-flex align-items-center gap-2 py-2">
+                        <input class="ms-0 form-check-input" type="checkbox" value="" id="flexCheckChecked">
+                        <label class="form-check-label" for="flexCheckChecked">dumb memes</label>
+                    </div>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                        <span class="d-inline-block bg-danger rounded-circle" style="width: .5em; height: .5em;"></span> Something else here
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                        <span class="d-inline-block bg-info rounded-circle" style="width: .5em; height: .5em;"></span> Separated link
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        $("#collection-search").click(function(e) {
+            e.stopPropagation();
+        });
+    </script>
+
+</body>
+
+</html>
