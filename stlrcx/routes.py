@@ -36,3 +36,16 @@ def view_tag(tag_name):
     tags = Tag.query.all()
 
     return render_template('view_tag.jinja', files=files, tags=tags)
+
+@app.route('/img/<id>')
+def view_image(id):
+
+    file = File.query.filter_by(id=id).first()
+
+    if not file:
+        print("image doesn't exist")
+        return
+    
+    tags = Tag.query.all()
+
+    return render_template('view_image.jinja', file=file, tags=tags)
