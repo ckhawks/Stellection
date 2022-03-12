@@ -1,14 +1,38 @@
 import os
 from flask import render_template, url_for, flash, redirect, request, send_from_directory
 from stlrcx import app  #, db, bcrypt
+from stlrcx.models import *
 
 @app.route("/")
 def home():
-    images = os.listdir(imageDir)
-    return render_template('home.jinja', images=images, imageDir=imageDir)
+    files = File.query.limit(2)
+
+    tags = Tag.query.all()
+    
+    return render_template('home.jinja', files=files, imageDir=imageDir, tags=tags)
 
 imageDir = "/Users/stellaric/Downloads/testing/"
 
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
     return send_from_directory(imageDir, filename, as_attachment=True) # as_attachemnt=False
+
+@app.route('/tag/<tag_name>')
+def view_tag(tag_name):
+
+    # tag_name -> tag id -> find matching file_ids from r_tag_file -> return files as list of files
+
+    tag = Tag.query.filter_by(tag_name=tag_name).first()
+    if not tag:
+        print("tag doesn't exist")
+        return
+
+    rfiles = RTagFile.query.filter_by(tag_id=tag.id).all()
+
+    files = list()
+    for rfile in rfiles:
+        files.append(File.query.get(rfile.file_id))
+
+    tags = Tag.query.all()
+
+    return render_template('view_tag.jinja', files=files, tags=tags)

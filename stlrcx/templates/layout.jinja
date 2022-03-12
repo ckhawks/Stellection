@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    {# include 'header.jinja' #} 
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
             <div class="container">
@@ -42,15 +43,20 @@
             </div>
             <div class="col-md-3">
                 <div class="content-section">
-                    <h3>Records</h3>
-                        <ul class="list-group">
-                            record list
-                        </ul>
-                    </p>
+                    <h3>Tags</h3>
+                    <ul style="padding-left: 0px;">
+                        {% for tag in tags %}
+                            <li class="list-group-item" >
+                                <a href="{{ url_for('view_tag', tag_name=tag.tag_name) }}">{{tag.tag_name}}</a> <!--  -->
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
     </main>
+
+    {# include 'footer.jinja' #} 
 
 
     <!-- Optional JavaScript -->

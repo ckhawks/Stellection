@@ -13,9 +13,41 @@ from stlrcx import routes
 
 # setting up db for first time use
 from stlrcx import db
-if not os.path.exists('database.db'): 
+from stlrcx import models
+if not os.path.exists('stlrcx/database.db'): 
     db.create_all()
-    print("made all")
+    print("JUST RECREATED THE DATABASE :smile:")
+
+    """
+    # Create a test user
+    new_user = models.User('a@a.com', 'aaaaaaaa')
+    new_user.display_name = 'Nathan'
+    db.session.add(new_user)
+    db.session.commit()
+
+    new_user.datetime_subscription_valid_until = datetime.datetime(2019, 1, 1)
+    db.session.commit()
+    """
+
+rows = models.Tag.query.first()
+if not rows:
+    # Create tags and add things to do
+    bulk = list()
+    bulk.append(models.Tag(tag_name="guns"))
+    bulk.append(models.Tag(tag_name="mountains"))
+    db.session.bulk_save_objects(bulk)
+    db.session.commit()
+
+    bulk = list()
+    bulk.append(models.RTagFile(tag_id=1, file_id=1))
+    bulk.append(models.RTagFile(tag_id=1, file_id=1))
+ 
+    bulk.append(models.RTagFile(tag_id=2, file_id=1))
+    bulk.append(models.RTagFile(tag_id=2, file_id=2))
+    bulk.append(models.RTagFile(tag_id=2, file_id=2))
+    bulk.append(models.RTagFile(tag_id=2, file_id=1))
+    db.session.bulk_save_objects(bulk)
+    db.session.commit()
 
 # more setup
 # setting up File table
