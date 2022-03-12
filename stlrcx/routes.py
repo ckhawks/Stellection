@@ -11,4 +11,4 @@ imageDir = "/Users/stellaric/Downloads/testing/"
 
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
-    return send_from_directory(imageDir, filename, as_attachment=True)
+    return send_from_directory(imageDir, filename, as_attachment=True) # as_attachemnt=False
