@@ -35,17 +35,13 @@ if not rows:
     bulk = list()
     bulk.append(models.Tag(tag_name="guns"))
     bulk.append(models.Tag(tag_name="mountains"))
+    bulk.append(models.Tag(tag_name="cool stuff"))
     db.session.bulk_save_objects(bulk)
     db.session.commit()
 
     bulk = list()
-    bulk.append(models.RTagFile(tag_id=1, file_id=1))
-    bulk.append(models.RTagFile(tag_id=1, file_id=1))
- 
-    bulk.append(models.RTagFile(tag_id=2, file_id=1))
+    bulk.append(models.RTagFile(tag_id=1, file_id=1)) 
     bulk.append(models.RTagFile(tag_id=2, file_id=2))
-    bulk.append(models.RTagFile(tag_id=2, file_id=2))
-    bulk.append(models.RTagFile(tag_id=2, file_id=1))
     db.session.bulk_save_objects(bulk)
     db.session.commit()
 
