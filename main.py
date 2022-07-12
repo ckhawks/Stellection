@@ -57,9 +57,24 @@ def getStar(star_id: int):
     return jsonify(star)
 
 # Update an existing star
+### Add or remove star from cluster
 @app.route('/stars/<int:star_id>', methods=["PUT"])
 def updateStar(star_id: int):
     body = request.get_json()
+    # request.json['cluster_id']
+    # request.json['action'] == "add" / "remove"
+    # request.json['cluster_ids']
+
+    """
+    {
+        "action": "add", # "add", "remove", "set"
+        "clusters": [
+            1,
+            2,
+            3
+        ]
+    }
+    """
     star = database.getStarByID(star_id)
     return jsonify(star)
 
