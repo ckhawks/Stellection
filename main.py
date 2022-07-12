@@ -1,156 +1,111 @@
-from distutils.log import debug
-import sqlite3
-from sqlite3 import Error
+from flask import Flask, jsonify, request, make_response
+from werkzeug.utils import secure_filename
 
-import os
+from db import db_test as database
 
-RECREATE_DB_ON_START = True
-DATABASE_PATH = r"catalog.db"
-DEBUG = True
+API_VERSION = "0.0.1"
+FILE_LOCATION = "files/"
 
-def debugLog(output):
-    if DEBUG:
-        print(output)
+"""
+file layout reference
+-- main.py
+-- /libraries
+    - /library1/
+        - galaxy.db
+        - files
+    - /library2/
+        - galaxy.db
+        - files
+"""
 
+app = Flask(__name__)
 
-# run once at start of program
-def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by db_file
-    :param db_file: database file
-    :return: Connection object or None
-    """
+@app.route("/")
+def hello_world():
+    return f"stellection cataloger v{API_VERSION}"
 
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
-    
-    return conn
+# Retrieve list of stars
+@app.route('/stars', methods=["GET"])
+def getStars():
+    # TODO add pagination(?)
+    stars = database.getStars()
+    return jsonify(stars)
+    # SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 44332 and this is thread id 45968.
 
-def create_table(conn, name, fields):
+# Create a new star
+@app.route('/stars', methods=["POST"])
+def addStar():
+    # read multipart data
+    # write file to filesystem
+    # get correct path of file
+    # call database.createStar()
+    if 'files' not in request.files:
+        return '', 403
 
-    sql = f""" CREATE TABLE IF NOT EXISTS {name} (
-       {fields}
-    ); """
-    try:
-        c = conn.cursor()
-        c.execute(sql)
-        debugLog(f"Created TABLE `{name}` (`{fields}`)")
-    except Error as e:
-        print(e)
+    files = request.files.getlist("files")
+    for f in files:
+        f_name = secure_filename(f.filename)
+        f.save(FILE_LOCATION + f_name)
+        database.createStar(star_properties=[request.form.get('name'), FILE_LOCATION + f_name])
 
-def create_star(conn, star_properties):
-    """
-    Create a new star into the stars table
-    :param conn:
-    :param project:
-    :return: project id
-    """
-    sql = ''' INSERT INTO stars(name,path)
-              VALUES(?,?) '''
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, star_properties)
-        conn.commit()
-        debugLog(f"Created STAR `{star_properties[0]}` @ `{star_properties[1]}`")
-        return cur.lastrowid
-    except Error as e:
-        print(e)
+    return '', 204
 
-def create_cluster(conn, cluster_properties):
-    """
-    Create a new cluster
-    :param conn:
-    :param task:
-    :return:
-    """
+# Retrieve a star
+@app.route('/stars/<int:star_id>', methods=["GET"])
+def getStar(star_id: int):
+    star = database.getStarByID(star_id)
+    return jsonify(star)
 
-    sql = ''' INSERT INTO clusters(name,type)
-              VALUES(?,?) '''
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, cluster_properties)
-        conn.commit()
-        debugLog(f"Created CLUSTER `{cluster_properties[0]}`")
-        return cur.lastrowid
-    except Error as e:
-        print(e)
+# Update an existing star
+@app.route('/stars/<int:star_id>', methods=["PUT"])
+def updateStar(star_id: int):
+    body = request.get_json()
+    star = database.getStarByID(star_id)
+    return jsonify(star)
 
-def add_star_to_cluster(conn, star_id, cluster_id):
-    sql = ''' INSERT INTO cluster_stars (cluster_id, star_id)
-    VALUES(?,?); '''
-    try:
-        cur = conn.cursor()
-        cur.execute(sql, (cluster_id, star_id))
-        conn.commit()
-        debugLog(f"Added STAR `{star_id}` to CLUSTER `{cluster_id}`")
-        return cur.lastrowid
-    except Error as e:
-        print(e)
+# Delete a star
+@app.route('/stars/<int:star_id>', methods=["DELETE"])
+def deleteStar(star_id: int):
+    database.deleteStarByID(star_id)
+    return '', 204
 
-def main():
-    print(" --- Stellection Cataloger v0.1 --- \n")
+# Retrieve a list of clusters
+@app.route('/clusters', methods=["GET"])
+def getClusters():
+    # TODO add pagination(?)
+    clusters = database.getClusters()
+    return jsonify(clusters)
 
-    if RECREATE_DB_ON_START:
-        try:
-            os.remove(DATABASE_PATH)
-            print("Removed existing database.")
-        except:
-            print("No database exists at provided DATABASE_PATH.")
+# Create a new cluster
+@app.route('/clusters', methods=["POST"])
+def addCluster():
+    body = request.get_json()
+    database.create_cluster(body) # TODO change arguments
+    return '', 204
 
-    sql_create_stars_table = f""" CREATE TABLE IF NOT EXISTS stars (
-        id integer PRIMARY KEY,
-        name text,
-        path text
-    ); """
+# Retrieve a cluster
+@app.route('/clusters/<int:cluster_id>', methods=["GET"])
+def getCluster(cluster_id):
+    cluster = database.get_cluster(cluster_id)
+    return jsonify(cluster)
 
-    sql_create_clusters_table = """ CREATE TABLE IF NOT EXISTS clusters (
-        id integer PRIMARY KEY,
-        name text,
-        type text
-    );
-    """
+# Update an existing cluster
+@app.route('/clusters/<int:cluster_id>', methods=["PUT"])
+def updateCluster(cluster_id):
+    cluster = database.get_cluster(cluster_id)
+    return jsonify(cluster)
 
-    sql_create_clusters_objects_table = """ CREATE TABLE IF NOT EXISTS cluster_stars (
-       cluster_id integer,
-       star_id integer
-    ); """
+# Delete a cluster
+@app.route('/clusters/<int:cluster_id>', methods=["DELETE"])
+def deleteCluster(cluster_id):
+    cluster = database.get_cluster(cluster_id)
+    return jsonify(cluster)
 
-    # create database connection
-    conn = create_connection(DATABASE_PATH)
-
-    if conn is not None:
-        print("Connected to database @ " + DATABASE_PATH)
-
-        # create objects table
-        create_table(conn=conn, name="stars", fields="id integer PRIMARY KEY, name text, path text")
-
-        # create clusters table
-        create_table(conn=conn, name="clusters", fields="id integer PRIMARY KEY, name text, type text")
-
-        # create cluster_objects table
-        create_table(conn=conn, name="cluster_stars", fields="cluster_id integer, star_id integer")
-
-        # add starting stars to objects table
-        star_1 = create_star(conn=conn, star_properties=('cool star', 'main.py'))
-        star_2 = create_star(conn=conn, star_properties=('bad star', 'reference.py'))
-
-        # add starting clusters
-        cluster_funnyfiles = create_cluster(conn=conn, cluster_properties=('funny images', 'images'))
-        cluster_lamefiles = create_cluster(conn=conn, cluster_properties=('lame files', 'files'))
-        cluster_memes = create_cluster(conn=conn, cluster_properties=('memes', 'multimedia'))
-
-        # add stars to cluster
-        add_star_to_cluster(conn=conn, star_id=star_1, cluster_id=cluster_funnyfiles)
-        add_star_to_cluster(conn=conn, star_id=star_2, cluster_id=cluster_funnyfiles)
-
-        print("\nDone!")
-
-    else:
-        print("Error! Cannot create the database connection.")
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 if __name__ == '__main__':
-    main()
+    database = database.DB()
+
+    app.run(debug=True)
