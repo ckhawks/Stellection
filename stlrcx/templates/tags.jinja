@@ -1,0 +1,41 @@
+{% extends "regular_layout.jinja" %} {% block content %} 
+
+<h1>Tags Overview</h1>
+<br>
+<h2>Create new tag</h2>
+<form method="POST" action="">
+  <div class="row g-3 align-items-center">
+    <div class="col-auto">
+        <label for="new_tag_name" class="col-form-label">Tag name</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" name="new_tag_name" id="new_tag_name">
+    </div>
+    <div class="col-auto">
+        <button type="submit" value="Create Tag" formmethod="post" class="btn btn-primary">Create Tag</button>
+    </div>
+  </div>
+</form>
+
+<br>
+<h2>All Tags</h2>
+<div class="content-section">
+    <ul style="padding-left: 0px;">
+        <form method="POST" action="">
+            {% for tag in tags %}
+                <li class="list-group-item" >
+                    <a href="{{ url_for('view_tag', tag_name=tag.tag_name) }}">{{tag.tag_name}}</a>
+                    <div>
+                    {{ RTagFile.query.filter_by(tag_id=tag.id).count() }} <i class="fa-solid fa-images"></i>
+                    </div>
+                    <button type="submit" class="btn btn-danger me-md-2" style="align-self: flex-end;" id="{{tag.tag_name}}" name="tagid_{{tag.id}}" value="Delete">Delete <i class="fa-solid fa-trash"></i></button>
+                    <!-- <input style="float: right" type="submit" value="Delete" id="{{tag.tag_name}}" name="tagid_{{tag.id}}"> -->
+                </li>
+            {% endfor %}
+        </form>
+    </ul>
+</div>
+
+
+
+{% endblock content %}

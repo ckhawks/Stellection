@@ -115,3 +115,20 @@ a.article-title:hover {
 .picks-team-record {
     margin-bottom: 0px;
 }
+
+.grid-sizer,
+.grid-item {
+    width: 290px;
+    margin: 5px;
+    background-color: white;
+    border: lightgrey 1px solid;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.list-group-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}

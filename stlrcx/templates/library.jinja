@@ -1,0 +1,54 @@
+{% extends "wide_layout.jinja" %} {% block content %} 
+
+<script src="/static/dist/masonry.pkgd.min.js"></script>
+<script src="/static/dist/imagesloaded.pkgd.min.js"></script>
+<!-- add https://imagesloaded.desandro.com/ https://masonry.desandro.com/layout.html#imagesloaded -->
+
+<h2>File Library</h2>
+
+<div class="grid" id="library-grid">
+
+    {% for file in files %}
+
+    <div class='grid-item'>
+        <a href="{{ url_for('view_image', id=file.id)}}">
+            <strong>{{file.file_path}} {{file.id}}</strong>  {{file}}
+            <img class="img-fluid" src="{{ url_for('download_file', filename=file.file_path) }}">
+        </a>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<script>
+var librarygrid = document.querySelector('#library-grid');
+
+var msnry = new Masonry(librarygrid, {
+    itemSelector: '.grid-item',
+    columnWidth: 300,
+    //columnWidth: '.grid-sizer',
+});
+
+imagesLoaded(librarygrid).on('progress', function() {
+  // layout Masonry after each image loads
+  msnry.layout();
+});
+
+/*
+// element
+imagesLoaded( document.querySelector('#library-grid'), function( instance ) {
+  console.log('all images are loaded');
+});
+*/
+
+/*
+// selector string
+imagesLoaded( '#library-grid', function() {...});
+// multiple elements
+var posts = document.querySelectorAll('.post');
+imagesLoaded( posts, function() {...});
+*/
+</script>
+
+{% endblock content %}

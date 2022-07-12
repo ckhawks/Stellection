@@ -51,7 +51,7 @@ from stlrcx.models import File
 rows = File.query.first()
 if not rows:
     bulk = list()
-    media_files = os.listdir("/Users/stellaric/Downloads/testing/")
+    media_files = os.listdir("D:\\Downloads\\stellection_testing")
     for media_file in media_files:
         bulk.append(File(file_path=media_file))
     db.session.bulk_save_objects(bulk)

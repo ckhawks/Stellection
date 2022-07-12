@@ -1,0 +1,32 @@
+{% extends "wide_layout.jinja" %} {% block content %} 
+
+<h1>Sorting Tool</h1>
+
+show image
+show checklist list of tags
+
+<div class="row">
+    <div class="col-sm">
+        <h1>{{file.id}}: {{file.file_path}}</h1>
+        <img src="{{ url_for('download_file', filename=file.file_path) }}">
+    </div>
+    <div class="col-sm">
+        <h3>Modify Tags</h3>
+        <form method="POST" action="">
+            <ul style="padding-left: 0px;">
+                {% for tag in tags %} <!-- automatically populate if image has tags already --> 
+                    <li class="list-group-item">
+                        <input type="checkbox" id="{{tag.tag_name}}" name="tagid_{{tag.id}}" value="{{tag.id}}" {% if tag.id in filetags %} checked {% endif %}>
+                        <label for="{{tag.tag_name}}">{{tag.tag_name}}</label><br>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <input type="submit" value="BOTTUNO" formmethod="post">
+        </form>
+    </div>
+</div>
+
+next button, previous button
+
+{% endblock content %}

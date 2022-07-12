@@ -6,13 +6,15 @@
         <div class="container">
             <a class="navbar-brand mr-4" href="/">STLRCX</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav mr-auto"></div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
-                
+                    <a class="navbar-brand mr-4" href="{{ url_for('library') }} ">Library</a>
+                    <a class="navbar-brand mr-4" href="{{ url_for('tags') }} ">Tags</a>
+                    <a class="navbar-brand mr-4" href="{{ url_for('sorter') }}">Sorter</a>
                 </div>
             </div>
         </div>
@@ -20,16 +22,18 @@
 </header>
 <main role="main" class="container">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md">
             {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
             <div class="alert alert-{{ category }}">
                 {{ message }}
             </div>
             {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
         </div>
+
+        {% if show_taglist %}
         <div class="col-md-3">
             <div class="content-section">
-                <h3>Tags</h3>
+                <h3><a href="{{ url_for('tags') }}">Tags</a></h3>
                 <ul style="padding-left: 0px;">
                     {% for tag in tags %}
                         <li class="list-group-item" >
@@ -39,6 +43,8 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
+
     </div>
 </main>
 

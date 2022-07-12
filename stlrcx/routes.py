@@ -15,9 +15,9 @@ def home():
     if order == "rand":
         random.shuffle(files)
     
-    return render_template('home.jinja', files=files, imageDir=imageDir, tags=tags)
+    return render_template('home.jinja', files=files, imageDir=imageDir, tags=tags, show_taglist=True)
 
-imageDir = "/Users/stellaric/Downloads/testing/"
+imageDir = "D:\\Downloads\\stellection_testing"
 
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
@@ -48,7 +48,7 @@ def view_tag(tag_name):
 
     tags = Tag.query.all()
 
-    return render_template('view_tag.jinja', files=files, tags=tags)
+    return render_template('view_tag.jinja', files=files, tags=tags, show_taglist=True)
 
 @app.route('/img/<id>', methods=['GET', 'POST'])
 def view_image(id):
@@ -80,7 +80,6 @@ def view_image(id):
             
             # going through checklist to see if tag is checked
             if tag_id:
-                print("PART 1 ")
                 tag_id = int(tag_id)
                 # making sure that we are not assigning the same tag to file 
                 if tag_id not in filetags:
@@ -107,9 +106,128 @@ def view_image(id):
             flash(f'Updated! Changes: ' + ', '.join(output_string) + f' <span class="font-weight-light float-right">{datetime.now().strftime("%m/%d/%Y, %H:%M:%S %Z")}</span>', 'success')
 
         return render_template('view_image.jinja', file=file, filetags=filetags, tags=tags)
+            
+@app.route('/sort', methods=['GET', 'POST'])
+def sorter():
+    id = 1
+
+    # check if there's a file for that id
+    file = File.query.filter_by(id=id).first()
+
+    if not file:
+        print("image doesn't exist")
+        return
+
+    tags = Tag.query.all()
+    
+    # getting all tags associated with image 
+    file_with_tags = RTagFile.query.filter_by(file_id=file.id).all()
+    filetags = [int(f.tag_id) for f in file_with_tags]
+    
+    if request.method == 'GET':
+        return render_template('sorter.jinja', file=file, filetags=filetags, tags=tags)
+
+    elif request.method == 'POST':
+        return render_template('sorter.jinja', file=file, filetags=filetags, tags=tags)
 
 # image sorting view to do later, similar to view_image BUT DIFFERNET
 @app.route('/sort/<id>', methods=['GET', 'POST'])
-def sort_images(id):
-    print()
+def sort_images(id=None):
+
+    # check if there's a file for that id
+    file = File.query.filter_by(id=id).first()
+
+    if not file:
+        print("image doesn't exist")
+        return
+
+    tags = Tag.query.all()
+    
+    # getting all tags associated with image 
+    file_with_tags = RTagFile.query.filter_by(file_id=file.id).all()
+    filetags = [int(f.tag_id) for f in file_with_tags]
+    
+    if request.method == 'GET':
+        return render_template('sorter.jinja', file=file, filetags=filetags, tags=tags)
+
+    elif request.method == 'POST':
+        return render_template('sorter.jinja', file=file, filetags=filetags, tags=tags)
+
+@app.route('/tags', methods=['GET', 'POST'])
+def tags():
+
+    tags = Tag.query.all()
+
+    if request.method == 'GET':
+
+        return render_template('tags.jinja', tags=tags, RTagFile=RTagFile)
+
+    elif request.method == 'POST':
+
+        output_string = []
+
+        # TODO move create_tag functionality to this page
+
+        # TODO go through request arguments and check if any one has a value of "Delete" ? instead of going through all tags
+        # or if any of them contain tagid in key and Delete in value
+
+        # TODO add confirmation prompt on frontend delete button "Are you sure you want to delete tag 'bruh' ? It has 21031 images currently associated with it. "
+        
+        # getting new tag to be added to db
+        new_tag_name = request.form.get('new_tag_name')
+            # checking to make sure tag is not already in db
+        if new_tag_name:
+            tags_names = [tag.tag_name for tag in tags]
+            if new_tag_name not in tags_names:
+                db.session.add(Tag(tag_name=new_tag_name))
+                db.session.commit()
+
+                output_string.append(f'created tag <b>{new_tag_name}</b>')
                 
+            
+            else:
+                output_string.append(f'tag with name <b>{new_tag_name}</b> already exists')
+
+        else:
+            for tag in tags:
+
+                delete_tag = request.form.get(f'tagid_{tag.id}')
+                
+                if delete_tag:
+                    tag_to_be_deleted = Tag.query.filter_by(tag_name=tag.tag_name).delete()
+                    output_string.append(f'deleted <b>{tag.tag_name}</b>')
+
+                    # deleting relationship with tagid manually (figure out cascade later maybe )
+                    tag_relationships = RTagFile.query.filter_by(tag_id=tag.id).all()
+                    for tag_relation in tag_relationships:
+                        db.session.delete(tag_relation)
+                        
+                    
+            db.session.commit()
+
+        tags = Tag.query.all()
+
+        if output_string:
+            flash(f'Updated! Changes: ' + ', '.join(output_string) + f' <span class="font-weight-light float-right">{datetime.now().strftime("%m/%d/%Y, %H:%M:%S %Z")}</span>', 'success')
+        return render_template('tags.jinja', tags=tags, RTagFile=RTagFile)
+
+# TODO CRUD tags (missing update (change tag name))
+# TODO CRUD images (missing create (upload image to site), delete (delete image from site))
+
+@app.route('/library', methods=["GET"])
+def library():
+    files = File.query.all()
+
+    tags = Tag.query.all()
+
+    order = request.args.get('order', default = 'asc', type = str)
+    if order == "rand":
+        random.shuffle(files)
+    
+    return render_template('library.jinja', files=files, imageDir=imageDir, tags=tags, show_taglist=False)
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    tags = Tag.query.all()
+
+    return render_template('upload.jinja', show_taglist=False)

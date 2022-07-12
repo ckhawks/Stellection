@@ -1,5 +1,15 @@
 {% extends "regular_layout.jinja" %} {% block content %} 
 
+<h2>Rename tag</h2>
+<form method="POST" action="">
+
+    <label for="renamed_tag_name">New tag name</label>
+    <input type="text" name="renamed_tag_name" id="renamed_tag_name">
+    
+    <input type="submit" value="Rename Tag" formmethod="post">
+
+</form>
+
 <ul>
     {% for file in files %}
         <a href="{{ url_for('view_image', id=file.id)}}">
