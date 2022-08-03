@@ -11,10 +11,13 @@ node_modules/
 files/*
 files/
 config.json
+catalog.db
 
 # python COMPILED SHIZTS
 __pycache__/
 $.py[cod]
+
+*/__pycache__/*
 
 # local env files
 .env.local

@@ -1,4 +1,8 @@
 import sqlite3
+import util.cfg as cfg
+from util.logger import log
+
+from flask import abort
 
 class Star():
 
@@ -11,14 +15,13 @@ class Star():
         '''
         sql = 'insert into stars values (null, ?, ?)'
         try:
-            cur = self.conn.cursor()
-            cur.execute(sql, star_properties)
-            self.conn.commit()
-            self.debugLog(f"Created STAR `{star_properties[0]}` @ `{star_properties[1]}`")
-            return cur.lastrowid
+            _, _, lastrowid = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=star_properties)
+
+            log(f"Created STAR `{star_properties[0]}` @ `{star_properties[1]}`")
+            return lastrowid, None
 
         except sqlite3.Error as e:
-            print(e)
+            log(e)
 
 
     def getStars(self):
@@ -45,13 +48,13 @@ class Star():
         '''
         get_stars = 'select * from stars'
         try:
-            cur = self.conn.cursor()
-            cur.execute(get_stars)
 
             output = dict()
             output["stars"] = list()
 
-            for star in cur:
+            stars, rowcount, lastrowid = self.query(statement=get_stars, quantity=self.FETCH_ALL, parameters=None)
+
+            for star in stars:
                 star_dict = dict()
 
                 star_dict["star_id"] = star[0]
@@ -98,10 +101,10 @@ class Star():
             where id=cluster_stars.cluster_id'''
 
         try:
-            cur = self.conn.cursor()
-            cur.execute(get_stars, (star_id,))
+
+            star, rowcount, lastrowid = self.query(statement=get_stars, quantity=self.FETCH_ONE, parameters=(star_id,))
             self.debugLog(f"get STAR `{star_id}`")
-            star = cur.fetchone()
+            
             print(star)
 
             data = dict()
@@ -109,10 +112,12 @@ class Star():
             data["star_name"] = star[1]
             data["star_path"] = star[2]
             
-            cur.execute(get_tag_names, (star_id,))
+
+            # todo change tag-> cluster
+            tags, rowcount, lastrowid = self.query(statement=get_stars, quantity=self.FETCH_ALL, parameters=(star_id,))
             
             cluster_list = list()
-            for tag in cur:
+            for tag in tags:
                 temp = dict()
                 temp['cluster_id'] = tag[0]
                 temp['cluster_name'] = tag[1]
@@ -149,12 +154,41 @@ class Star():
     def getResourcePathByStarId(self, star_id):
         sql = 'select path from stars where id=?'
         try:
-            cur = self.conn.cursor()
-            cur.execute(sql, (star_id,))
-            rows = cur.fetchone()
-            print(rows)
+            data, _, _ = self.query(statement=sql, quantity=self.FETCH_ONE, parameters=(star_id,))
 
-            return rows[0]
+            return data[0], None
             
         except sqlite3.Error as e:
             print(e)
+            return None, {'code': 400, 'message': 'Something wrong with the db'}
+        except TypeError as e:
+            print(e)
+            return None, {'code': 404, 'message': 'Star not found'}
+
+    
+    def tempstar(self, star_id):
+        sql = 'select * from stars'
+        data, rowcount, lastrowid = self.query(statement=sql, quantity=4)
+
+        abort(400, "you did it wrong")
+        for d in data:
+            print(d)
+        
+        print(lastrowid)
+        print(rowcount)
+    
+        
+    def tempstar2(self, star_id):
+        sql = 'insert into stars values (null, ?, ?)'
+        
+        data, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=("name", "filename"))
+        
+
+        
+        for d in data:
+            print(d)
+        print(lastrowid)
+        print(rowcount)
+        
+        return lastrowid
+        

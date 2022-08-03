@@ -1,6 +1,5 @@
 import json
 from os.path import exists
-from util.debug import log
 
 # change the variables in config.json
 
@@ -31,21 +30,22 @@ def createDefaultConfig():
 
     with open(_CONFIG_PATH, "w") as jsonfile:
         jsonfile.write(myJSON)
-        log(f"Wrote default configuration file to `{_CONFIG_PATH}`.")
+        print(f"Wrote default configuration file to `{_CONFIG_PATH}`.")
 
 
 def loadConfigFile():
+    print("\n  READING CONFIG  ")
     # check if config file exists
     if(not exists(_CONFIG_PATH)):
-        log("Configuration file does not exist.")
+        print("Configuration file does not exist.")
         # if not, create default
         createDefaultConfig()
 
     # then load config
     with open(_CONFIG_PATH, "r") as jsonfile:
         data = json.load(jsonfile)
-        log("Read config successful")
-    log(f"Loaded configuration: {data}")
+        print("Read config successful")
+    print(f"Loaded configuration: {data}")
 
     global FILE_PATH, API_VERSION, APP_PORT, APP_ADDRESS, ENVIRONMENT, DEBUG
 

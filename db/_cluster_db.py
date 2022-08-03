@@ -1,21 +1,22 @@
 import sqlite3
 
+from util.logger import log
+
 class Cluster():
 
-    def createCluster(self, cluster_properties: list):
+    def createCluster(self, name: str):
         '''
         Create a new cluster
 
-        :param cluster_properties: list that includes the name and type 
+        :param name: name of the cluster
         :return: the id of the cluster just created
         '''
-        sql = 'insert into clusters values (null, ?, ?)'
+        sql = 'insert into clusters values (null, ?)'
         try:
-            cur = self.conn.cursor()
-            cur.execute(sql, cluster_properties)
-            self.conn.commit()
-            self.debugLog(f"Created CLUSTER `{cluster_properties[0]}`")
-            return cur.lastrowid
+            _, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_ALL, parameters=(name,))
+
+            log(f"Created CLUSTER `{name}`")
+            return lastrowid
 
         except sqlite3.Error as e:
             print(e)
@@ -33,39 +34,36 @@ class Cluster():
                 {
                     cluster_id: 1,
                     cluster_name: "name1",
-                    cluster_type: "type1",
                     cluster_starcount: 3
                 },
                 {
                     cluster_id: 2,
                     cluster_name: "name2",
-                    cluster_type: "type2",
                     cluster_starcount: 0
                 }
             ]
         }
         '''
         get_clusters = '''
-        select clusters.id, clusters.name, clusters.type, count(cluster_id) as star_count
+        select clusters.id, clusters.name, count(cluster_id) as star_count
         from clusters
         left join cluster_stars on id=cluster_id
         group by id
         order by star_count desc, id
         '''
         try:
-            cur = self.conn.cursor()
-            cur.execute(get_clusters) 
+
+            clusters, rowcount, lastrowid = self.query(statement=get_clusters, quantity=self.FETCH_ALL, parameters=None)
 
             output = dict()
             cluster_list = list()
 
-            for cluster in cur:
+            for cluster in clusters:
                 cluster_dict = dict()
 
                 cluster_dict['cluster_id'] = cluster[0]
                 cluster_dict['cluster_name'] = cluster[1]
-                cluster_dict['cluster_type'] = cluster[2]
-                cluster_dict['cluster_starcount'] = cluster[3] # number of items in this cluster
+                cluster_dict['cluster_starcount'] = cluster[2] # number of items in this cluster
 
                 cluster_list.append(cluster_dict)
 
@@ -117,18 +115,19 @@ class Cluster():
         try:
             cur = self.conn.cursor()
             cur.execute(get_cluster, (cluster_id,))
-            self.debugLog(f"get CLUSTER `{cluster_id}`")
-            cluster = cur.fetchone()
+
+            cluster, _, _ = self.query(statement=get_cluster, quantity=self.FETCH_ONE, parameters=(cluster_id,))
+            log(f"get CLUSTER `{cluster_id}`")
 
             data = dict()
             data['cluster_id'] = cluster[0]
             data['cluster_name'] = cluster[1]
             data['cluster_starcount'] = cluster[2]
             
-            cur.execute(get_stars, (cluster_id,))
-            star_list = list()
+            stars, _, _ = self.query(statement=get_stars, quantity=self.FETCH_ONE, parameters=(cluster_id,))
 
-            for star in cur:
+            star_list = list()
+            for star in stars:
                 star_dict = dict()
 
                 star_dict['star_id'] = star[0]
@@ -154,10 +153,62 @@ class Cluster():
         '''
         sql = 'delete from clusters where id=?'
         try:
-            cur = self.conn.cursor()
-            cur.execute(sql, (cluster_id,))
-            self.conn.commit()
-            self.debugLog(f"delete CLUSTER `{cluster_id}`")
+
+            _, rowcount, _ = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(cluster_id,))
+            
+            log(f"delete CLUSTER `{cluster_id}`")
+            return rowcount
+
+        # https://stackoverflow.com/a/28978959
 
         except sqlite3.Error as e:
-            print(e)
+            print(e)   
+            return 0
+
+    
+    def updateClusterByID(self, cluster_id: int, properties: dict):
+        '''
+        Updates a cluster name based on id
+        
+        :param cluster_id: id of the cluster to be updated
+        :param properties: dictionary of all of the values to change 
+        :return: return true if name is unique
+        '''
+        
+        # TODO improvement: if no values are changing (sql_values is none none none), bad request
+        # TODO if cluster no exist, 404
+        # 
+
+        sql_values = {
+            "name": properties.get("cluster_name", None)
+            # "value": properties.get("cluster_value", None)
+        }
+        
+        # no valid data was sent to update
+        if not any(sql_values.values()):
+            log(f"no valid values to change provided")
+            return False, "No valid values provided"
+
+        # https://stackoverflow.com/a/61417642
+        sql = '''
+        update clusters set 
+        name=coalesce(?, name)
+        where id=?'''
+        try:
+            data, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(sql_values["name"], cluster_id))
+
+            log(f"update CLUSTER `{cluster_id}` values `{sql_values}`")
+            return True, "all good"
+
+        # unique failed :(
+        except sqlite3.Error as e:
+            print(e) 
+            return False, ""
+
+
+"""
+{
+    "cluster_name": "",
+    "cluster_property": 213
+}
+"""
