@@ -1,10 +1,21 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, send_from_directory
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
-from db import db_test as database
+
+# from db import db_test as database
+from db import database as Database
 
 API_VERSION = "0.0.1"
 FILE_LOCATION = "files/"
+
+APP_PORT = 5000
+APP_ADDRESS = "0.0.0.0"
+# ENV = "prod"
+ENV = "test"
+
+
+# https://www.reddit.com/r/flask/comments/8g7ruf/comment/dy9q3yx/?utm_source=share&utm_medium=web2x&context=3
 
 """
 file layout reference
@@ -19,6 +30,10 @@ file layout reference
 """
 
 app = Flask(__name__)
+CORS(app)
+
+# TODO better error-handling when resources don't exist (return HTTP error codes)
+### handle error codes on frontend too
 
 @app.route("/")
 def hello_world():
@@ -41,6 +56,7 @@ def addStar():
     # call database.createStar()
     if 'files' not in request.files:
         return '', 403
+        # TODO https://www.reddit.com/r/flask/comments/vxxhzv/comment/ifyt6tk/?utm_source=share&utm_medium=web2x&context=3
 
     files = request.files.getlist("files")
     for f in files:
@@ -91,18 +107,18 @@ def getClusters():
     clusters = database.getClusters()
     return jsonify(clusters)
 
+# Retrieves a cluster by id, including list of stars
+@app.route('/clusters/<int:cluster_id>', methods=['GET'])
+def getCluster(cluster_id: int):
+    cluster = database.getClusterByID(cluster_id)
+    return jsonify(cluster)
+
 # Create a new cluster
 @app.route('/clusters', methods=["POST"])
 def addCluster():
     body = request.get_json()
     database.create_cluster(body) # TODO change arguments
     return '', 204
-
-# Retrieve a cluster
-@app.route('/clusters/<int:cluster_id>', methods=["GET"])
-def getCluster(cluster_id):
-    cluster = database.get_cluster(cluster_id)
-    return jsonify(cluster)
 
 # Update an existing cluster
 @app.route('/clusters/<int:cluster_id>', methods=["PUT"])
@@ -116,11 +132,28 @@ def deleteCluster(cluster_id):
     cluster = database.get_cluster(cluster_id)
     return jsonify(cluster)
 
+# # serve a local static resource (file) from the files directory
+# @app.route('/file/<path:filepath>', methods=["GET"])
+# def serveFile(filepath):
+#     return send_from_directory(FILE_LOCATION[:-1], filepath)
+
+# serve a local static resource (file) from the files directory, BASED on the star ID
+@app.route('/stars/<int:star_id>/resource', methods=["GET"])
+def serveResourceByStarId(star_id):
+    filepath = database.getResourcePathByStarId(star_id)
+    return send_from_directory(FILE_LOCATION[:-1], filepath)
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 if __name__ == '__main__':
-    database = database.DB()
+    database = Database.DB()
 
-    app.run(debug=True)
+    if(ENV == 'test'):
+        app.run(debug=True, port=APP_PORT, host=APP_ADDRESS)
+    else:
+        from waitress import serve
+        serve(app, host=APP_ADDRESS, port=APP_PORT)
+
+        # https://flask.palletsprojects.com/en/1.1.x/server/

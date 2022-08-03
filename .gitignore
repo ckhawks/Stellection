@@ -1,8 +1,20 @@
+# stupid macos bullshit file
 .DS_Store
+
+# NPM IS GARBAGE
 node_modules/
+
+# directories
 /dist/
+
+# user files
 files/*
 files/
+config.json
+
+# python COMPILED SHIZTS
+__pycache__/
+$.py[cod]
 
 # local env files
 .env.local
