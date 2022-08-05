@@ -17,8 +17,6 @@ catalog.db
 __pycache__/
 $.py[cod]
 
-*/__pycache__/*
-
 # local env files
 .env.local
 .env.*.local

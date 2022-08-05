@@ -13,13 +13,14 @@ class Cluster():
         '''
         sql = 'insert into clusters values (null, ?)'
         try:
-            _, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_ALL, parameters=(name,))
+            _, _, lastrowid = self.query(statement=sql, quantity=self.FETCH_ALL, parameters=(name,))
 
             log(f"Created CLUSTER `{name}`")
-            return lastrowid
+            return lastrowid, None
 
         except sqlite3.Error as e:
             print(e)
+            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
 
     def getClusters(self):
@@ -68,10 +69,11 @@ class Cluster():
                 cluster_list.append(cluster_dict)
 
             output['clusters'] = cluster_list
-            return output
+            return output, None
 
         except sqlite3.Error as e:
             print(e)
+            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
 
     def getClusterByID(self, cluster_id: int):
@@ -138,11 +140,11 @@ class Cluster():
 
             data['stars'] = star_list
 
-            return data
+            return data, None
 
         except sqlite3.Error as e:
             print(e)
-    
+            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
     def deleteClusterByID(self, cluster_id: int):
         '''
@@ -157,13 +159,13 @@ class Cluster():
             _, rowcount, _ = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(cluster_id,))
             
             log(f"delete CLUSTER `{cluster_id}`")
-            return rowcount
+            return rowcount, None
 
         # https://stackoverflow.com/a/28978959
 
         except sqlite3.Error as e:
             print(e)   
-            return 0
+            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
     
     def updateClusterByID(self, cluster_id: int, properties: dict):
@@ -198,12 +200,12 @@ class Cluster():
             data, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(sql_values["name"], cluster_id))
 
             log(f"update CLUSTER `{cluster_id}` values `{sql_values}`")
-            return True, "all good"
+            return rowcount, None
 
         # unique failed :(
         except sqlite3.Error as e:
             print(e) 
-            return False, ""
+            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
 
 """

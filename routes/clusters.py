@@ -8,7 +8,7 @@ from . import routes
 def getClusters():
     # TODO add pagination(?)
     clusters = database.getClusters()
-    return jsonify(clusters)
+    return jsonify(clusters[0])
 
 # Create a new cluster
 @routes.route('/clusters', methods=["POST"])
@@ -21,7 +21,7 @@ def addCluster():
 @routes.route('/clusters/<int:cluster_id>', methods=['GET'])
 def getCluster(cluster_id: int):
     cluster = database.getClusterByID(cluster_id)
-    return jsonify(cluster)
+    return jsonify(cluster), 200
 
 # Update an existing cluster
 @routes.route('/clusters/<int:cluster_id>', methods=["PATCH"])
@@ -31,14 +31,15 @@ def updateCluster(cluster_id):
     success, message = database.updateClusterByID(cluster_id=cluster_id, properties=body)
 
     if (success):
-        return message, 200
+        cluster = database.getClusterByID(cluster_id)
+        return jsonify(cluster), 200
+        #return message, 200
     else:
         return message, 400
 
 """
 {
-    "cluster_name": "",
-    "cluster_property": 213
+    "cluster_name": "new name"
 }
 """
 

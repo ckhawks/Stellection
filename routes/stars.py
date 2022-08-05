@@ -7,9 +7,10 @@ from . import routes
 
 # Retrieve list of stars
 @routes.route('/stars', methods=["GET"])
-def getStars():
+async def getStars():
     # TODO add pagination(?)
-    stars = database.getStars()
+    stars, _ = database.getStars()
+    # stars, _ = await database.getStars_async()
     return jsonify(stars)
     # SQLite objects created in a thread can only be used in that same thread. The object was created in thread id 44332 and this is thread id 45968.
 
@@ -38,7 +39,7 @@ def addStar():
 # Retrieve a star
 @routes.route('/stars/<int:star_id>', methods=["GET"])
 def getStar(star_id: int):
-    star = database.getStarByID(star_id)
+    star, _ = database.getStarByID(star_id)
     return jsonify(star)
 
 # # Update an existing star
@@ -100,10 +101,13 @@ def addStarToClusters(star_id):
 
         
     if rows_affected == total_actions:
-        return '', 200
+        star = database.getStarByID(star_id)
+        return jsonify(star), 200
         
     elif rows_affected > 0:
-        return 'worked somewhat', 200
+        star = database.getStarByID(star_id)
+        return jsonify(star)
+        return 'worked somewhat', 200 # TODO how do we send both object and error about partial failure
         
     elif rows_affected == 0:
         return '', 404
@@ -118,6 +122,16 @@ def addStarToClusters(star_id):
     }
     """
 
+    # response:
+    """
+    {
+        "error": {'code': 404, 'message': 'Star not found'}
+        "star": {
+            normal star getStar thing
+        }
+    }
+    """
+
 ''' 
 example patch data
 [
@@ -126,8 +140,3 @@ example patch data
   { "op": "remove", "path": "/foo" }
 ]
 '''
-
-@routes.route('/startest', methods=['GET'])
-def temp():
-    database.tempstar(1)
-    return '', 200

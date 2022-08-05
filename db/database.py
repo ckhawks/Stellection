@@ -7,11 +7,10 @@ from db._dummy_data import DummyData
 import contextlib
 import util.cfg as cfg
 from util.logger import log
-from os.path import exists
+import aiosqlite
 
 
-
-RECREATE_DB_ON_START = True
+RECREATE_DB_ON_START = False
 DATABASE_PATH = r"catalog.db"
 
 class DB(Cluster, StarCluster, Star, DummyData):
@@ -67,7 +66,6 @@ class DB(Cluster, StarCluster, Star, DummyData):
         )        
         '''
         self.query(statement=create_stars, quantity=self.FETCH_NONE, parameters=None)
-
         log(f"Created TABLE `stars`")
 
         create_clusters = '''
@@ -120,6 +118,22 @@ class DB(Cluster, StarCluster, Star, DummyData):
                         return None, cursor.rowcount, cursor.lastrowid # TODO idk if this is right
                     else:
                         return None, None, None # this probably not good eityher
+
+
+    async def async_query(self, statement: str, quantity: int, parameters: tuple = None):
+        async with aiosqlite.connect(DATABASE_PATH, check_same_thread=False) as db:
+            async with db.execute(statement, parameters) as cursor:
+                # return data
+                if quantity == self.FETCH_ONE: # 1
+                    return await cursor.fetchone(), await cursor.rowcount, await cursor.lastrowid
+                elif quantity == self.FETCH_ALL: # -1
+                    return await cursor.fetchall(), await cursor.rowcount, await cursor.lastrowid
+                elif quantity > 1: # 2-infinity
+                    return await cursor.fetchmany(quantity), await cursor.rowcount, await cursor.lastrowid
+                elif quantity == self.FETCH_NONE: # 0
+                    return None, await cursor.rowcount, await cursor.lastrowid # TODO idk if this is right
+                else:
+                    return None, None, None # this probably not good eityher
 
     # multiple rows
     # multiple statements
