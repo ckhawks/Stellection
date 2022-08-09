@@ -14,3 +14,35 @@ PATCH request should return the modified object
 - In the case of multiple modified objects, it could return an array of all of them
   
 DOCUMENTATION OPENAPI SWAGGER INSOMNIA
+
+async sqlite
+
+REACT
+- front-end style reference research
+- front-end design
+- product feature exploration
+  - figure out how intended usage works, what interactions/screens are required for that
+    - lofi mockups? wireframes? invision?
+
+# Backlog, future
+
+database migrations
+database backups
+file backups
+prod deployment (independent of dev environment)
+- able to start using the software?
+
+add attribution fields on stars
+
+retrieval streams
+- archillect (done-ish)
+- twitter
+  - images
+  - videos
+  - text
+    - threads
+- instagram
+  - IG content (refer to chrome extension?)
+  - aesthetic pics only listener?
+
+authentication/accounts/roles

@@ -1,10 +1,11 @@
 import sqlite3
+import aiosqlite
 
 from util.logger import log
 
 class Cluster():
 
-    def createCluster(self, name: str):
+    async def createCluster(self, name: str):
         '''
         Create a new cluster
 
@@ -13,17 +14,23 @@ class Cluster():
         '''
         sql = 'insert into clusters values (null, ?)'
         try:
-            _, _, lastrowid = self.query(statement=sql, quantity=self.FETCH_ALL, parameters=(name,))
-
+            _, _, lastrowid = await self.async_query(statement=sql, quantity=self.FETCH_NONE, parameters=(name,))
+            print(lastrowid)
+            print(name)
             log(f"Created CLUSTER `{name}`")
             return lastrowid, None
 
-        except sqlite3.Error as e:
+        except aiosqlite.IntegrityError as e:
             print(e)
-            return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
+            return None, {'code': 409, 'message': 'Cluster already exists'} # TODO wrong
+
+        except aiosqlite.Error as e:
+            print(e)
+            return None,  {'code': 404, 'message': 'Cluster is wrong'} # TODO wrong
 
 
-    def getClusters(self):
+
+    async def getClusters(self):
         '''
         Retrieve all clusters
 
@@ -54,7 +61,7 @@ class Cluster():
         '''
         try:
 
-            clusters, rowcount, lastrowid = self.query(statement=get_clusters, quantity=self.FETCH_ALL, parameters=None)
+            clusters, rowcount, lastrowid = await self.async_query(statement=get_clusters, quantity=self.FETCH_ALL, parameters=None)
 
             output = dict()
             cluster_list = list()
@@ -71,12 +78,12 @@ class Cluster():
             output['clusters'] = cluster_list
             return output, None
 
-        except sqlite3.Error as e:
+        except aiosqlite.Error as e:
             print(e)
             return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
 
-    def getClusterByID(self, cluster_id: int):
+    async def getClusterByID(self, cluster_id: int):
         '''
         Returns cluster information and cluster's items
         
@@ -115,10 +122,8 @@ class Cluster():
         where stars.id=cluster_stars.star_id'''
         
         try:
-            cur = self.conn.cursor()
-            cur.execute(get_cluster, (cluster_id,))
 
-            cluster, _, _ = self.query(statement=get_cluster, quantity=self.FETCH_ONE, parameters=(cluster_id,))
+            cluster, _, _ = await self.async_query(statement=get_cluster, quantity=self.FETCH_ONE, parameters=(cluster_id,))
             log(f"get CLUSTER `{cluster_id}`")
 
             data = dict()
@@ -126,9 +131,10 @@ class Cluster():
             data['cluster_name'] = cluster[1]
             data['cluster_starcount'] = cluster[2]
             
-            stars, _, _ = self.query(statement=get_stars, quantity=self.FETCH_ONE, parameters=(cluster_id,))
-
+            stars, _, _ = await self.async_query(statement=get_stars, quantity=self.FETCH_ALL, parameters=(cluster_id,))
+            print('STARS', stars)
             star_list = list()
+
             for star in stars:
                 star_dict = dict()
 
@@ -142,11 +148,11 @@ class Cluster():
 
             return data, None
 
-        except sqlite3.Error as e:
+        except aiosqlite.Error as e:
             print(e)
             return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
-    def deleteClusterByID(self, cluster_id: int):
+    async def deleteClusterByID(self, cluster_id: int):
         '''
         Deletes a cluster based on id
 
@@ -156,19 +162,19 @@ class Cluster():
         sql = 'delete from clusters where id=?'
         try:
 
-            _, rowcount, _ = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(cluster_id,))
+            _, rowcount, _ = await self.async_query(statement=sql, quantity=self.FETCH_NONE, parameters=(cluster_id,))
             
             log(f"delete CLUSTER `{cluster_id}`")
             return rowcount, None
 
         # https://stackoverflow.com/a/28978959
 
-        except sqlite3.Error as e:
+        except aiosqlite.Error as e:
             print(e)   
             return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 
     
-    def updateClusterByID(self, cluster_id: int, properties: dict):
+    async def updateClusterByID(self, cluster_id: int, properties: dict):
         '''
         Updates a cluster name based on id
         
@@ -197,13 +203,13 @@ class Cluster():
         name=coalesce(?, name)
         where id=?'''
         try:
-            data, rowcount, lastrowid = self.query(statement=sql, quantity=self.FETCH_NONE, parameters=(sql_values["name"], cluster_id))
+            data, rowcount, lastrowid = await self.async_query(statement=sql, quantity=self.FETCH_NONE, parameters=(sql_values["name"], cluster_id))
 
             log(f"update CLUSTER `{cluster_id}` values `{sql_values}`")
             return rowcount, None
 
         # unique failed :(
-        except sqlite3.Error as e:
+        except aiosqlite.Error as e:
             print(e) 
             return None,  {'code': 404, 'message': 'Star not found'} # TODO wrong
 

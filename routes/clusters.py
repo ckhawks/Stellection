@@ -1,34 +1,37 @@
-from flask import Flask, jsonify, request, make_response, send_from_directory
+from flask import Flask, jsonify, request, make_response, send_from_directory, abort
 from werkzeug.utils import secure_filename
 from db.database import database
 
 from . import routes
 
 @routes.route('/clusters', methods=["GET"])
-def getClusters():
+async def getClusters():
     # TODO add pagination(?)
-    clusters = database.getClusters()
+    clusters = await database.getClusters()
     return jsonify(clusters[0])
 
 # Create a new cluster
 @routes.route('/clusters', methods=["POST"])
-def addCluster():
+async def addCluster():
     body = request.get_json()
-    database.createCluster(name=body['name'])
-    return '', 204
+    cluster, error = await database.createCluster(name=body['name'])
+    if error:
+        abort(error['code'], error['message'])
+    else:
+        return '', 204
 
 # Retrieves a cluster by id, including list of stars
 @routes.route('/clusters/<int:cluster_id>', methods=['GET'])
-def getCluster(cluster_id: int):
-    cluster = database.getClusterByID(cluster_id)
+async def getCluster(cluster_id: int):
+    cluster, _ = await database.getClusterByID(cluster_id)
     return jsonify(cluster), 200
 
 # Update an existing cluster
 @routes.route('/clusters/<int:cluster_id>', methods=["PATCH"])
-def updateCluster(cluster_id):
+async def updateCluster(cluster_id):
     body = request.get_json()
 
-    success, message = database.updateClusterByID(cluster_id=cluster_id, properties=body)
+    success, message = await database.updateClusterByID(cluster_id=cluster_id, properties=body)
 
     if (success):
         cluster = database.getClusterByID(cluster_id)
@@ -45,8 +48,8 @@ def updateCluster(cluster_id):
 
 # Delete a cluster
 @routes.route('/clusters/<int:cluster_id>', methods=["DELETE"])
-def deleteCluster(cluster_id):
-    deleted = database.deleteClusterByID(cluster_id)
+async def deleteCluster(cluster_id):
+    deleted, _ = await database.deleteClusterByID(cluster_id)
 
     if(deleted > 0):
         return '', 200

@@ -3,17 +3,19 @@ import sqlite3
 from db._star_db import Star
 from db._cluster_db import Cluster
 from db._star_cluster_db import StarCluster
-from db._dummy_data import DummyData
 import contextlib
 import util.cfg as cfg
 from util.logger import log
 import aiosqlite
 
+# SQL ERRORS https://github.com/omnilib/aiosqlite/blob/13d165656f73c3121001622253a532bdc90b2b91/docs/api.rst
 
 RECREATE_DB_ON_START = False
 DATABASE_PATH = r"catalog.db"
 
-class DB(Cluster, StarCluster, Star, DummyData):
+class DB(Cluster, StarCluster, Star):
+
+
     def __init__(self):
 
         log(f"\n:  Stellection Cataloger v{cfg.API_VERSION}")
@@ -29,7 +31,7 @@ class DB(Cluster, StarCluster, Star, DummyData):
                 os.remove(DATABASE_PATH)
                 log("Removed existing database.")
             except OSError as e:
-                # print(f"{e}")
+                # print(f"{e}")e
                 # raise
                 print(f"No database exists at provided DATABASE_PATH.")
 
@@ -41,6 +43,8 @@ class DB(Cluster, StarCluster, Star, DummyData):
             try:
                 self.conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
                 self.conn.execute("PRAGMA foreign_keys = ON")
+                self.conn.execute('PRAGMA foreign_key_check')
+                self.conn.close()
             except sqlite3.Error as e:
                 print(e)
             self.conn.close()
@@ -48,9 +52,14 @@ class DB(Cluster, StarCluster, Star, DummyData):
 
         self.setupDB()
 
-        if self.needs_dummy_data:
-            self.addDummyData()
-        
+        # if self.needs_dummy_data:
+        #     await self.addDummyData()
+
+    # @classmethod
+    # async def create(self):
+    #     print(self.needs_dummy_data)
+    #     if self.needs_dummy_data:
+    #         return self(await self.addDummyData())
 
     # setup DB for operation, no starting data except what is required
     def setupDB(self):
@@ -62,7 +71,10 @@ class DB(Cluster, StarCluster, Star, DummyData):
         create table if not exists stars (
             id integer primary key autoincrement not null,
             name text not null,
-            path text not null
+            path text not null,
+            attr_name text,
+            attr_url text,
+            attr_source text
         )        
         '''
         self.query(statement=create_stars, quantity=self.FETCH_NONE, parameters=None)
@@ -71,7 +83,7 @@ class DB(Cluster, StarCluster, Star, DummyData):
         create_clusters = '''
         create table if not exists clusters (
             id integer primary key autoincrement not null,
-            name text not null unique
+            name text not null unique, check(name <> '')
         )        
         '''
         self.query(statement=create_clusters, quantity=self.FETCH_NONE, parameters=None)
@@ -92,8 +104,6 @@ class DB(Cluster, StarCluster, Star, DummyData):
         '''
         self.query(statement=create_cluster_stars, quantity=self.FETCH_NONE, parameters=None)
         log(f"Created TABLE `cluster_stars`")
-        
-
     
 
     def query(self, statement: str, quantity: int, parameters: tuple = None):
@@ -123,17 +133,20 @@ class DB(Cluster, StarCluster, Star, DummyData):
     async def async_query(self, statement: str, quantity: int, parameters: tuple = None):
         async with aiosqlite.connect(DATABASE_PATH, check_same_thread=False) as db:
             async with db.execute(statement, parameters) as cursor:
+                await db.execute("PRAGMA foreign_keys = ON")
                 # return data
+                await db.commit()
                 if quantity == self.FETCH_ONE: # 1
-                    return await cursor.fetchone(), await cursor.rowcount, await cursor.lastrowid
+                    return await cursor.fetchone(), cursor.rowcount, cursor.lastrowid
                 elif quantity == self.FETCH_ALL: # -1
-                    return await cursor.fetchall(), await cursor.rowcount, await cursor.lastrowid
+                    return await cursor.fetchall(), cursor.rowcount, cursor.lastrowid
                 elif quantity > 1: # 2-infinity
-                    return await cursor.fetchmany(quantity), await cursor.rowcount, await cursor.lastrowid
+                    return await cursor.fetchmany(quantity), cursor.rowcount, cursor.lastrowid
                 elif quantity == self.FETCH_NONE: # 0
-                    return None, await cursor.rowcount, await cursor.lastrowid # TODO idk if this is right
+                    return None, cursor.rowcount, cursor.lastrowid # TODO idk if this is right
                 else:
                     return None, None, None # this probably not good eityher
+            
 
     # multiple rows
     # multiple statements
@@ -146,6 +159,5 @@ class DB(Cluster, StarCluster, Star, DummyData):
     #     for statement in statements
     #     cursor.execute(stuff)
 
-    
-    
+
 database = DB()

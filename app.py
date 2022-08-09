@@ -5,6 +5,10 @@ import util.cfg as cfg
 from util.logger import log
 from handlers.error_handler import handleException, handleHTTPException
 from werkzeug.exceptions import HTTPException
+from db._dummy_data import addDummy
+
+import asyncio
+
 
 cfg.loadConfigFile()
 
@@ -19,6 +23,8 @@ app.register_error_handler(HTTPException, handleHTTPException)
 
 if __name__ == '__main__':
     
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(addDummy())
 
     if(cfg.ENVIRONMENT == 'test'):
         app.run(debug=True, port=cfg.APP_PORT, host=cfg.APP_ADDRESS)
