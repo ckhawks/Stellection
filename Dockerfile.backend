@@ -1,0 +1,20 @@
+FROM node:16
+
+WORKDIR /app
+
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./turbo.json .
+RUN mkdir -p /app/backend
+# RUN mkdir -p /app/packages/av-common
+COPY ./backend/package.json /app/backend/package.json
+# COPY ./packages/av-common/package.json /app/packages/av-common/package.json
+RUN npm install
+
+# Build the project
+COPY ./ /app
+RUN npm i -g ts-node-dev
+RUN npm i -g turbo
+RUN npm i -g del-cli
+
+EXPOSE 5000
