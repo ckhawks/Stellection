@@ -9,7 +9,7 @@ RUN mkdir -p /app/backend
 # RUN mkdir -p /app/packages/av-common
 COPY ./backend/package.json /app/backend/package.json
 # COPY ./packages/av-common/package.json /app/packages/av-common/package.json
-# RUN npm install
+RUN npm install
 
 # Build the project
 COPY ./ /app

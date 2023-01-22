@@ -71,16 +71,16 @@ services:
       - '5555:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-  # backend-python:
-  #   build:
-  #     context: .
-  #     dockerfile: backend-python/Dockerfile
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - ./:/app
-  #   restart: always
-  #   command: python3 app.py
+  backend-python:
+    build:
+      context: .
+      dockerfile: backend-python/Dockerfile
+    ports:
+      - "5501:5000"
+    volumes:
+      - ./:/app
+    restart: always
+    command: python3 app.py
 volumes:
   cache:
     driver: local
