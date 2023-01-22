@@ -1,0 +1,22 @@
+{
+  "name": "stellection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:backend": "cd backend && npm run start",
+    "dev:frontend": "cd frontend && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckhawks/stellection.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ckhawks/stellection/issues"
+  },
+  "homepage": "https://github.com/ckhawks/stellection#readme"
+}

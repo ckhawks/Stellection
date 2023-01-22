@@ -3,9 +3,9 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile.frontend
+      dockerfile: frontend/Dockerfile
     ports:
-      - "3000:3000"
+      - "3500:3000"
     stdin_open: true
     volumes:
       - ./:/app
@@ -23,7 +23,7 @@ services:
       - SQL_PASSWORD=password
       - SQL_DATABASE=postgres
     ports:
-      - "5000:5000"
+      - "5500:5000"
     volumes:
       - ./:/app
       - /app/node_modules
@@ -32,35 +32,35 @@ services:
       - postgres
     restart: always
     command: npm run dev:backend
-  migration:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    command:
-      [
-        "./backend/screipts/wait-for-it.sh",
-        "db:5432",
-        "--",
-        "npm",
-        "run",
-        "migrate:backend"
-      ]
-    links:
-      - postgres
-    depends_on:
-      - postgres
-    extra_hosts: 
-      - "host.docker.internal:host-gateway"
-    environment:
-      - SQL_HOST=host.docker.internal
-      - SQL_USER=postgres
-      - SQL_PASSWORD=password
-      - SQL_DATABASE=postgres
-    restart: on-failure:10
-    volumes:
-      - ./:/app
-      - /app/node_modules
-      - /app/backend/node_modules
+  # migration:
+  #   build:
+  #     context: .
+  #     dockerfile: backend/Dockerfile
+  #   command:
+  #     [
+  #       "./backend/screipts/wait-for-it.sh",
+  #       "db:5432",
+  #       "--",
+  #       "npm",
+  #       "run",
+  #       "migrate:backend"
+  #     ]
+  #   links:
+  #     - postgres
+  #   depends_on:
+  #     - postgres
+  #   extra_hosts: 
+  #     - "host.docker.internal:host-gateway"
+  #   environment:
+  #     - SQL_HOST=host.docker.internal
+  #     - SQL_USER=postgres
+  #     - SQL_PASSWORD=password
+  #     - SQL_DATABASE=postgres
+  #   restart: on-failure:10
+  #   volumes:
+  #     - ./:/app
+  #     - /app/node_modules
+  #     - /app/backend/node_modules
   postgres:
     image: 'postgres:12'
     environment:
@@ -68,18 +68,19 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=postgres
     ports:
-      - '5432:5432'
+      - '5555:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-  backend-python:
-    build:
-      context: .
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./:/app
-    restart: always
-    command: python3 app.py
+  # backend-python:
+  #   build:
+  #     context: .
+  #     dockerfile: backend-python/Dockerfile
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./:/app
+  #   restart: always
+  #   command: python3 app.py
 volumes:
   cache:
     driver: local
