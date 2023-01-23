@@ -1,6 +1,5 @@
 import sqlite3
 
-from attr import attrib
 import util.cfg as cfg
 from util.logger import log
 import aiosqlite
