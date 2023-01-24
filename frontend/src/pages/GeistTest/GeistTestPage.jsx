@@ -19,13 +19,10 @@ const GeistTestContainer = (props) => {
 
     return (
         <>
-            <BaseLayout>
-
             
             <h2>Geist test lol</h2>
             <Button type="secondary">button</Button>
-            
-            </BaseLayout>
+        
             {/* <Page>
                 
                 <div class="menu-wrapper">

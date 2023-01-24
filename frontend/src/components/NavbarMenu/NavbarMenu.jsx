@@ -35,14 +35,17 @@ const NavbarMenu = (props) => {
                 <div className="navbar-center">
                     <div className={"navbar " + (props.wide ? "container-wide" : "container-regular")}>
                         <div className="navbar-logo">
-                            <a href="/">
+                            <Link to="/">
                                 <Image height="32px" mr={.5} src={StellectionLogo} draggable={false} title="Logo" alt="Stellection"/>
-                            </a>
+                            </Link>
+                            <Tabs initialValue={url} hideDivider hideBorder onChange={navTabsChangeHandler} value={url}>
+                                <Tabs.Item label="Geist Test" value="geist-test" />
+                            </Tabs>
                             
                         </div>
                         <div className="navbar-middle">
                             <Tabs initialValue={url} hideDivider hideBorder onChange={navTabsChangeHandler} value={url}>
-                                <Tabs.Item label="Collect" value="geist-test" />
+                                <Tabs.Item label="Collect" value="collect" />
                                 <Tabs.Item label="Organize" value="organize" /> 
                                 <Tabs.Item label="Browse" value="gallery" />
                             </Tabs>

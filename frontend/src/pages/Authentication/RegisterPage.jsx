@@ -20,7 +20,6 @@ const RegisterPage = () => {
 
     return (
         <>
-            <BaseLayout centered>
             <style jsx>
                 {` .right-icon {
                     margin-left: 0px !important;
@@ -76,7 +75,6 @@ const RegisterPage = () => {
                 </>
                 }   
             </div>
-            </BaseLayout>
         </>
     );
 }
