@@ -2,7 +2,7 @@ version: '3.7'
 services:
   frontend:
     build:
-      context: .
+      context: . # ./frontend
       dockerfile: frontend/Dockerfile
     ports:
       - "3500:3500"
@@ -13,25 +13,25 @@ services:
       - /app/frontend/node_modules
 #     - /app/backend/node_modules
     command: npm run start
-  # backend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.backend
-  #   environment:
-  #     - SQL_HOST=postgres
-  #     - SQL_USER=postgres
-  #     - SQL_PASSWORD=password
-  #     - SQL_DATABASE=postgres
-  #   ports:
-  #     - "5500:5500"
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules
-  #     - /app/backend/node_modules
-  #   depends_on:
-  #     - postgres
-  #   restart: always
-  #   command: npm run dev:backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      - SQL_HOST=postgres
+      - SQL_USER=postgres
+      - SQL_PASSWORD=password
+      - SQL_DATABASE=postgres
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/backend/node_modules
+    depends_on:
+      - postgres
+    restart: always
+    command: npm run dev:backend
   # migration:
   #   build:
   #     context: .
