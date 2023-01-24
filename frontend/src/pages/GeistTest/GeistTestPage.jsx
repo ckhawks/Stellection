@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Text, Page, Button, Spacer, Tabs } from '@geist-ui/react';
 import { Power, Github, Twitch as TwitchIcon, Twitter as TwitterIcon } from '@geist-ui/icons';
 
-import NavbarMenu from "../components/NavbarMenu/NavbarMenu";
-import Content from '../components/Content/Content';
-import Footer from '../components/Footer/Footer';
+import NavbarMenu from "../../components/NavbarMenu/NavbarMenu";
+import Footer from '../../components/Footer/Footer';
 
 import './Geist-UI-Custom.css';
+import BaseLayout from "../BaseLayout";
 
 // https://github.com/manuanish/manuanish.github.io
 
@@ -19,12 +19,13 @@ const GeistTestContainer = (props) => {
 
     return (
         <>
-            <div class="page">
-                <NavbarMenu/>
-                <Content props={props}/>
-                <Footer/>
-            </div>
+            <BaseLayout>
+
             
+            <h2>Geist test lol</h2>
+            <Button type="secondary">button</Button>
+            
+            </BaseLayout>
             {/* <Page>
                 
                 <div class="menu-wrapper">

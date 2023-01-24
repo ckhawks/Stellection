@@ -8,26 +8,26 @@ function getYear() {
     return new Date().getFullYear();
 }
 
-const Footer = () => {
+const Footer = (props) => {
     return (
         <>
-            <div class="footer">
-                <div class="container-noboot">
+            <div className="footer">
+                <div className={"" + (props.wide ? "container-wide" : "container-regular")}>
                     <Divider mb='4'/>
                     <div className="footer-row">
                         <div className="copyright-info">
                             © {getYear()} Stellection
                         </div>
                         <div className='icon-text-wrapper'>
-                            <GitCommitIcon inline size={18} className='icon'/>
+                            <GitCommitIcon size={18} className='icon'/>
                             <Spacer inline w={.35} />
                             <Text small className="code-text">a748bc3d</Text>
                             <Spacer inline w={3}/>
-                            <GitBranchIcon inline size={18} className='icon'/>
+                            <GitBranchIcon size={18} className='icon'/>
                             <Spacer inline w={.35} />
                             <Text small className="code-text">main</Text>
                             <Spacer inline w={3}/>
-                            <CalendarIcon inline size={18} className='icon'/>
+                            <CalendarIcon size={18} className='icon'/>
                             <Spacer inline w={.35} />
                             <Text small className="">13 minutes ago</Text>
                         </div>

@@ -1,6 +1,6 @@
 import './Home.css';
-import Stars from './../components/Stars';
-import Clusters from './../components/Clusters';
+import Stars from '../../components/Legacy/Stars';
+import Clusters from '../../components/Legacy/Clusters';
 
 function Home() {
   return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // bootstrap
 import Form from "react-bootstrap/Form";
-import InputGroup from 'react-bootstrap/InputGroup';
+// import InputGroup from 'react-bootstrap/InputGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -45,9 +45,12 @@ const Testing = () => {
     let updatedCheckedStates = {};
     for (let i = 0; i < clusters["clusters"].length; i++) {
       // console.log("e");
+      // eslint-disable-next-line
       if (clusters["clusters"][i]["cluster_id"] in clusterCheckStates) {
         // key already exists (checkbox already on screen)
+        // eslint-disable-next-line
         updatedCheckedStates[clusters["clusters"][i]["cluster_id"]] =
+        // eslint-disable-next-line
           clusterCheckStates[clusters["clusters"][i]["cluster_id"]];
       } else {
         updatedCheckedStates[clusters["clusters"][i]["cluster_id"]] = false;

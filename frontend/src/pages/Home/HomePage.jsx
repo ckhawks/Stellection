@@ -1,17 +1,44 @@
-import { Collapse, Text, Card, Grid, Fieldset, Button } from '@geist-ui/core';
+import { Collapse, Text, Card, Grid, Fieldset, Button, Image } from '@geist-ui/core';
 
-import './Content.css';
+import { useApi } from '../../hooks/useApi';
+import BaseLayout from '../BaseLayout';
 
-const Content = (props) => {
+const HomePage = (props) => {
+    const { data, error, isLoading } = useApi({path: "people", method: "get" });
+    console.log("data: " + data);
+    if(error) console.log("error: " + error);
+    if(isLoading) console.log("loading");
+
     return (
         <>
+            <BaseLayout>
+
+            
             <div className="main-content">
-                <div className='container-noboot'>
+                <div className='container-regular'>
                     <Text h1>Collect</Text>
                     content<br/>
                     content<br/>
                     content<br/>
                     content<br/>
+                    <Grid.Container gap={2} justify="center">
+                    
+                    { error && !isLoading && <h2>Error. Failed to fetch users.</h2>}
+                    { isLoading && <h2>Loading...</h2>}
+                    { !isLoading && data.map((user, index) => {
+                            return (
+                            <Grid xs={6} md={6} key={index}>
+                                <Card shadow width="100%">
+                                    <Image height="200px" width="400px" draggable={false} src={user.avatar} />
+                                    <Text h4 my={0}>{user.name}</Text>
+                                    
+                                    <Text>Age: {user.age}</Text>
+                                </Card>
+                            </Grid>
+                          )
+                        })
+                    }
+                    </Grid.Container>
                     content<br/>
                     content<br/>
                     content<br/>
@@ -88,8 +115,9 @@ const Content = (props) => {
                 </div>
                 
             </div>
+            </BaseLayout>
         </>
     );
 }
 
-export default Content;
+export default HomePage;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Star from '../components/Star';
+import Star from '../../components/Legacy/Star';
 
 import Loading from './Loading';
 

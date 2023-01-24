@@ -18,9 +18,7 @@ root.render(
   <React.StrictMode>
     <GeistProvider>
       <CssBaseline/>
-      <BrowserRouter>
         <App />
-      </BrowserRouter>
     </GeistProvider>
   </React.StrictMode>
 );
