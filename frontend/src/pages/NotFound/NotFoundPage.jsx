@@ -1,5 +1,3 @@
-import BaseLayout from "../BaseLayout";
-
 import { Text } from '@geist-ui/core';
 
 const NotFoundPage = () => {

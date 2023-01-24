@@ -1,23 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Card, Input, Spacer, Text, Link, Button, Dot } from '@geist-ui/core';
+import React, {  } from "react";
+import { Card, Input, Spacer, Text, Link, Button } from '@geist-ui/core';
 import {
     ArrowRight as ArrowRightIcon,
-    Check as CheckIcon,
-    Slash as SlashIcon,
     User as UserIcon,
-    Lock as LockIcon,
-    Mail as MailIcon
+    Lock as LockIcon
 } from '@geist-ui/icons'
-
-import BaseLayout from "../BaseLayout";
 
 const Login = () => {  
 
-    const [emailValue, setEmailValue] = useState('');
-    const emailChangeHandler = (e) => {
-        setEmailValue(e.target.value);
-        console.log("Email changed to " + e.target.value);
-    }
+    // const [emailValue, setEmailValue] = useState('');
+    // const emailChangeHandler = (e) => {
+    //     setEmailValue(e.target.value);
+    //     console.log("Email changed to " + e.target.value);
+    // }
 
     return (
         <>
