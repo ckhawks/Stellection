@@ -1,7 +1,5 @@
-import BaseLayout from "../BaseLayout";
-
-import React, { useEffect, useState } from "react";
-import { Card, Input, Spacer, Text, Link, Button, Dot } from '@geist-ui/core';
+import React, { useState } from "react";
+import { Card, Input, Spacer, Text, Link, Button } from '@geist-ui/core';
 import {
     ArrowRight as ArrowRightIcon,
     Check as CheckIcon,

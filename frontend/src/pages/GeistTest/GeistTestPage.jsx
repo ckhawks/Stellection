@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Text, Page, Button, Spacer, Tabs } from '@geist-ui/react';
-import { Power, Github, Twitch as TwitchIcon, Twitter as TwitterIcon } from '@geist-ui/icons';
+import React, {  } from "react";
+import { Button } from '@geist-ui/react';
 
-import NavbarMenu from "../../components/NavbarMenu/NavbarMenu";
-import Footer from '../../components/Footer/Footer';
 
 import './Geist-UI-Custom.css';
-import BaseLayout from "../BaseLayout";
+
 
 // https://github.com/manuanish/manuanish.github.io
 
 const GeistTestContainer = (props) => {
-    const [ buttonLoading, setButtonLoading ] = useState(false);
+    // const [ buttonLoading, setButtonLoading ] = useState(false);
 
-    const onButton1Click = () => {
-        setButtonLoading(!buttonLoading);
-    }
+    // const onButton1Click = () => {
+    //     setButtonLoading(!buttonLoading);
+    // }
 
     return (
         <>

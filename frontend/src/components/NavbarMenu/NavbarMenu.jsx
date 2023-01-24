@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image, Button, Tabs } from '@geist-ui/core';
-import { useLocation, redirect, Link, useNavigate } from 'react-router-dom'; // NavLink, useNavigate
+import { useLocation, Link, useNavigate } from 'react-router-dom'; // NavLink, redirect
 
 import './NavbarMenu.css';
 
@@ -57,7 +57,13 @@ const NavbarMenu = (props) => {
                                 <Tabs.Item label="Login" value="login" />
                             </Tabs>
                             <Link to="/register">
-                                <Button auto shadow type="secondary" ml=".5" /* onClick={redirect('/register') }*/><b>Sign Up</b></Button>
+                                <style jsx>{`
+                                    .btn:hover {
+                                        background-color: white !important;
+                                        color: black !important;
+                                    }
+                                `}</style>
+                                <Button auto shadow type="secondary" ml=".5"><b>Sign Up</b></Button>
                             </Link>
                             
                         </div>
