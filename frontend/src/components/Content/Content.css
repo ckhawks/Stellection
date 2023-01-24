@@ -1,0 +1,12 @@
+.main-content {
+    /* min-height: calc(100vh - 200px); */
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.container-noboot {
+    max-width: 1050px;
+    width: 100%;
+}
