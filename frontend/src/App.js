@@ -20,7 +20,9 @@ import GeistTestPage from './pages/GeistTest/GeistTestPage';
 import LoginPage from './pages/Authentication/LoginPage';
 import RegisterPage from "./pages/Authentication/RegisterPage";
 import GalleryPage from "./pages/Gallery/GalleryPage";
+import OrganizePage from "./pages/Organize/OrganizePage";
 
+import BaseLayout from "./pages/BaseLayout";
 
 function App() {
   return (
@@ -28,13 +30,24 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="*" element={<NotFoundPage/>} /> 
-          <Route path="/" element={<HomePage/>} />
-          <Route path="/geist-test" element={<GeistTestPage />} />
-          <Route path="/login" element={<LoginPage/>} />
-          <Route path="register" element={<RegisterPage />}/>
-          <Route path="/gallery" element={<GalleryPage/>}/>
 
+
+          {/* could refactor this to use contexts to inform the layout https://reactjs.org/docs/context.html */}
+          <Route element={<BaseLayout/>}>
+            <Route path="*" element={<NotFoundPage/>} />
+            <Route path="/" element={<HomePage/>} />
+            <Route path="geist-test" element={<GeistTestPage />} />
+          </Route>
+          <Route element={<BaseLayout centered/>}>
+            <Route path="login" element={<LoginPage/>} />
+            <Route path="register" element={<RegisterPage />}/>
+          </Route>
+          <Route element={<BaseLayout wide/>}>
+            <Route path="gallery" element={<GalleryPage/>}/>
+            <Route path="organize" element={<OrganizePage/>}/>
+          </Route>
+
+          {/* Legacy routes */}
           <Route path="old" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
@@ -47,12 +60,7 @@ function App() {
             <Route path="test" element={<Testing />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-          {/* <Route path="/" element={<Layout />}>
-            
-          </Route>
-          <Route path="geist-test" element={<GeistTestContainer />} />
-          <Route path="register" element={<RegisterPage />}/>
-          <Route path="gallery" element={<GalleryPage/>}/> */}
+
         </Routes>
       </BrowserRouter>
     </div>

@@ -21,7 +21,6 @@ const Login = () => {
 
     return (
         <>
-            <BaseLayout centered>
             <style jsx>
                 {` .right-icon {
                     margin-left: 0px !important;
@@ -47,7 +46,6 @@ const Login = () => {
                             
                 
             </div>
-            </BaseLayout>
                 
         </>
     );

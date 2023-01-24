@@ -12,10 +12,10 @@ const swrApi = async (payload) => {
       body,
       contentType: contentTypeSent,
       header,
-      token,
+      // token,
       params,
       formData,
-      showError = true
+      // showError = true
     } = payload;
     let url = `${BASE_URL}/${path}`;
     if (params) {
