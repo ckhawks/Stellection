@@ -19,7 +19,7 @@ const HomePage = (props) => {
             
             { error && !isLoading && <h2>Error. Failed to fetch users.</h2>}
             { isLoading && <h2>Loading...</h2>}
-            { !isLoading && data.map((user, index) => {
+            { !isLoading && data && data.map((user, index) => {
                     return (
                     <Grid xs={6} md={6} key={index}>
                         <Card shadow width="100%">

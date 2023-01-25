@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -9,17 +8,14 @@ import reportWebVitals from './reportWebVitals';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 // geist
-import { GeistProvider, CssBaseline } from '@geist-ui/react';
+
 
 // requests https://swr.vercel.app/
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GeistProvider>
-      <CssBaseline/>
-        <App />
-    </GeistProvider>
+    <App />
   </React.StrictMode>
 );
 
@@ -27,3 +23,10 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+//// REFERENCE SITES USING GEIST
+// https://github.com/ofekashery/react-dashboard-design
+// https://sentineo.app/
+// https://github.com/unix/cdn-viewer
+// https://github.com/manuanish/manuanish.github.io
+// https://github.com/geist-org/geist-ui

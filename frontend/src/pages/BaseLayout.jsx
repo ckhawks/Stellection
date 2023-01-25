@@ -7,8 +7,8 @@ const BaseLayout = (props) => {
     return (
         <>
             <NavbarMenu wide={props.wide}/>
-            <div class="main-content">
-                <div class={(props.wide ? "container-wide " : "container-regular ") + (props.centered ? "vertical-center" : "")}>
+            <div className="main-content">
+                <div className={(props.wide ? "container-wide " : "container-regular ") + (props.centered ? "vertical-center" : "")}>
                     <Outlet/>
                     {/* {props.children} */}
                 </div>

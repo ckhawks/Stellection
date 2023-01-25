@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Image, Button, Tabs } from '@geist-ui/core';
+import { Image, Button, Tabs, Avatar, Popover, Spacer } from '@geist-ui/core';
 import { useLocation, Link, useNavigate } from 'react-router-dom'; // NavLink, redirect
+import {
+    LogOut as LogOutIcon,
+    User as UserIcon
+} from '@geist-ui/icons'
 
 import './NavbarMenu.css';
 
 // research sass vs scss 
 
 import StellectionLogo from "../../assets/images/Logo.svg";
+import TestAvatar from '../../assets/images/test-avatar.gif';
 
 const NavbarMenu = (props) => {
     const location = useLocation();
     const [url, setUrl] = useState(null);
     let navigate = useNavigate();
+
+    const loggedIn = true;
 
     useEffect(() => {
         setUrl(location.pathname.substring(1));
@@ -28,6 +35,65 @@ const NavbarMenu = (props) => {
         console.log(value)
         navigate('/' + value);
     }
+
+    const avatarPopoverContent = (
+        <>
+            <div class="current-user-popover">                
+                <Popover.Item width={"auto"}>
+                    <UserIcon size={20} /> <Spacer inline w={.35}/>Signed in as <Spacer inline w={.25}/><b>Stellaric</b>
+                </Popover.Item>
+                <Popover.Item line />
+                <Popover.Item>
+                    <Link href="#">Your profile</Link>
+                </Popover.Item>
+                <Popover.Item>
+                    <Link color href="#">Settings</Link>
+                </Popover.Item>
+                <Popover.Item>
+                    <Link color href="#">Admin settings</Link>
+                </Popover.Item>
+                {/* <Popover.Item>
+                    <span>Command-Line</span>
+                </Popover.Item> */}
+                <Popover.Item line />
+                <Popover.Item>
+                    <Link to="/login">Temp: Login</Link>
+                </Popover.Item>
+                <Popover.Item>
+                    <Link color to="/register">Temp: Register</Link>
+                </Popover.Item>
+                <Popover.Item line />
+                <Popover.Item>
+                    <Link to="/logout"><LogOutIcon size={20} /> <Spacer inline w={.35} />Logout</Link>
+                </Popover.Item>
+                <style jsx>{`
+                    .tooltip-content.popover > .inner {
+                        padding-top: 7px;
+                        padding-bottom: 7px;
+                    }            
+                    
+                    .current-user-popover > .item > * {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        // white-space: nowrap;
+                    }
+
+                    .current-user-popover > .item {
+                        white-space: nowrap;
+                    }
+
+                    .current-user-popover > .item:hover:not(.line) {
+                        background-color: #E00;
+                    }
+
+                    .current-user-popover > .item:hover > a {
+                        color: black;
+                    }
+                `}</style>
+            </div>
+        </>
+    )
 
     return (
         <> 
@@ -52,19 +118,36 @@ const NavbarMenu = (props) => {
                         </div>
                         
                         <div className="navbar-right">
-                            <Tabs initialValue={url} hideDivider hideBorder onChange={navTabsChangeHandler} value={url}>
-                                <Tabs.Item label="Contact" value="contact" />
-                                <Tabs.Item label="Login" value="login" />
-                            </Tabs>
-                            <Link to="/register">
-                                <style jsx>{`
-                                    .btn:hover {
-                                        background-color: white !important;
-                                        color: black !important;
-                                    }
-                                `}</style>
-                                <Button auto shadow type="secondary" ml=".5"><b>Sign Up</b></Button>
-                            </Link>
+                            { !loggedIn && 
+                                <>
+                                    <Tabs initialValue={url} hideDivider hideBorder onChange={navTabsChangeHandler} value={url}>
+                                        <Tabs.Item label="Contact" value="contact" />
+                                        <Tabs.Item label="Login" value="login" />
+                                    </Tabs>
+                                    <Link to="/register">
+                                        <style jsx>{`
+                                            .btn:hover {
+                                                background-color: white !important;
+                                                color: black !important;
+                                            }
+                                        `}</style>
+                                        <Button auto shadow type="secondary" ml=".5"><b>Sign Up</b></Button>
+                                    </Link>
+                                </>
+                            }             
+                            { loggedIn && 
+                                <>
+                                    <Tabs initialValue={url} hideDivider hideBorder onChange={navTabsChangeHandler} value={url}>
+                                        <Tabs.Item label="Contact" value="contact" />
+                                    </Tabs>
+                                    <Spacer inline w={.7} />
+  
+                                    <Popover className="current-user-popover" content={avatarPopoverContent} width="200px" placement="bottomEnd" >
+                                        <Avatar src={TestAvatar} width="30px" height="30px" style={{ cursor: "pointer"}}/>
+                                    </Popover>
+                                    
+                                </>
+                            }               
                             
                         </div>
                         

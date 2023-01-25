@@ -58,6 +58,7 @@ const Testing = () => {
     }
     setClusterCheckStates(updatedCheckedStates);
     console.log(updatedCheckedStates);
+    // eslint-disable-next-line
   }, [clusters]);
 
   

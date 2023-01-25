@@ -27,12 +27,19 @@
     font-weight: 500;
 }
 
-.icon-text-wrapper {
-    display: flex;
+.icon-text-wrapper, .tooltip {
+    display: flex !important;
     align-items: center;
     justify-content: flex-end;
-    align-self: flex-end;
+    /* align-self: flex-end; why is this here? */
     font-size: 1.05rem;
+}
+
+.github-info-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-self: flex-end;
 }
 
 .copyright-info {
