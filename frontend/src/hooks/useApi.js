@@ -1,5 +1,7 @@
 import useSWR from 'swr';
 
+import { useState } from 'react';
+
 // const BASE_URL = process.env.BACKEND_API_URL;
 const BASE_URL = "http://127.0.0.1:5500";
 
@@ -65,16 +67,39 @@ const swrApi = async (payload) => {
     }
 };
 
+// old
 export function useApi(params) {
-    // const token = useSelector(getTokenSelector);
-    
-    const response = useSWR(
-        {
-        // token,
-        ...params
-        },
-        (...args) => swrApi(...args)
-    );
-    
-    return response;
+  // const token = useSelector(getTokenSelector);
+  
+  const response = useSWR(
+      {
+      // token,
+      ...params
+      },
+      (...args) => swrApi(...args)
+  );
+  
+  return response;
 }
+
+// new
+export function useApi2() {
+  // const token = useSelector(getTokenSelector);
+  const [ token, setToken ] = useState(undefined);
+
+  const makeRequest = async (params) => {
+    if (!token) {
+      throw new Error("BAD!!! useApi must be initiated with token");
+    }
+    const response = await swrApi({...params, token});
+    return response;
+  }
+  
+  return { token, setToken, makeRequest };
+}
+
+// const { setToken } = useApi();
+// const { makeRequest } = useApi();
+
+// makeRequest({});
+

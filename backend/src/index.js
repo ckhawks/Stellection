@@ -1,10 +1,9 @@
 const { createServer } = require('http');
 const express = require('express');
 const cors = require('cors');
+
 const app = express();
 const port = 5500;
-
-
 
 const server = createServer(app);
 

@@ -29,6 +29,14 @@ import Page from "./pages/Page";
 
 // https://beta.reactjs.org/learn/sharing-state-between-components
 
+const routes = [
+  {path: "/", title: "Home", element: <NotFoundPage/>},
+  {path: "/", title: "Home", element: <NotFoundPage/>}
+]
+
+// TODO setup eslintrc.json to autoformat on save - prettier plugin
+
+
 function App() {
   const [themeType, setThemeType] = useState('light')
   const enableDebugThemeButton = false;
@@ -52,16 +60,15 @@ function App() {
             
 
             <Route element={<BaseLayout/>}>
-
-              <Route path="*" element={(
-                <Page title="Not Found" children={<NotFoundPage/>}/>
-              )} />
-              <Route path="/" element={(
-                <Page title="Home" children={<HomePage/>}/>
-              )} />
-              <Route path="geist-test" element={(
-                <Page title="Geist Testing" children={<GeistTestPage />}/>
-              )} />
+            {
+              routes.map((route) => {
+                return (
+                  <Route path={route.path} element={(
+                    <Page title={route.title} children={route.element}/>
+                  )} />
+                )
+              })
+            }
 
             </Route>
 
