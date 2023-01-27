@@ -1,0 +1,40 @@
+{
+    "$schema": "https://turbo.build/schema.json",
+    "pipeline": {
+      "build": {
+        "dependsOn": ["^build"],
+        "outputs": ["build"],
+        "inputs": ["src"]
+      },
+      "lint": {
+        "dependsOn": ["^build"],
+        "outputs": []
+      },
+      "test:pipeline": {
+        "dependsOn": ["^build"],
+        "outputs": []
+      },
+      "test:api": {
+        "dependsOn": ["^build"],
+        "outputs": []
+      },
+      "test": {
+        "dependsOn": ["^build"],
+        "outputs": []
+      },
+      "migrate": {
+        "outputs": []
+      },
+      "dev": { 
+        "dependsOn": ["^build"],
+        "outputs": [],
+        "cache": false
+      },
+      "start": {
+        "dependsOn": ["^build"],
+        "outputs": [],
+        "cache": false
+      }
+    },
+    "globalEnv": []
+  }

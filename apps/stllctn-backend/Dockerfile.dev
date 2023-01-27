@@ -1,0 +1,28 @@
+FROM node:19
+
+WORKDIR /app
+
+# Copy required metadata files
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./turbo.json .
+
+# Create backend and common directories
+RUN mkdir -p /app/apps/stllctn-backend
+RUN mkdir -p /app/packages/stllctn-common
+
+# Copy the metadata files for each app/package
+COPY ./apps/stllctn-backend/package.json /app/apps/stllctn-backend/package.json
+COPY ./packages/stllctn-common/package.json /app/packages/stllctn-common/package.json
+
+# npm install from root directory will install packages for descendants (i think)
+RUN npm install
+
+# Build the project
+COPY ./ /app
+RUN npm i -g ts-node-dev
+RUN npm i -g turbo
+RUN npm i -g del-cli
+
+EXPOSE 5500
+

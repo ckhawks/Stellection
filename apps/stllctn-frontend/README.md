@@ -1,0 +1,3 @@
+HOW DO YOU START IT?? IDK EITHER
+
+npm start

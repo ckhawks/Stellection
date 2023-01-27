@@ -1,0 +1,52 @@
+.footer {
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    color: rgba(0, 0, 0, .8);
+    margin-top: 40px;
+}
+
+/* .container-regular {
+    max-width: 1050px;
+    width: 100%;
+} */
+
+.icon {
+    display: inline-block;
+    /* margin-top: 5px; */
+}
+
+.code-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: smaller;
+}
+
+.sm {
+    font-size: 0.825rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+}
+
+.icon-text-wrapper, .tooltip {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    /* align-self: flex-end; why is this here? */
+    font-size: 1.05rem;
+}
+
+.github-info-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-self: flex-end;
+}
+
+.copyright-info {
+    flex-grow: 1;
+}
+
+.footer-row {
+    display: flex;
+    flex-direction: row;
+}

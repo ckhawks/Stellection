@@ -1,0 +1,30 @@
+FROM node:19
+
+WORKDIR /app
+
+# Copy required metadata files
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./turbo.json .
+
+# Create directories for frontend and common
+RUN mkdir -p /app/apps/stllctn-frontend
+RUN mkdir -p /app/packages/stllctn-common
+
+# Copy the metadata files for each app/package
+COPY ./apps/stllctn-frontend/package.json /app/apps/stllctn-frontend/package.json
+COPY ./packages/stllctn-common/package.json /app/packages/stllctn-common/package.json
+
+# npm install from root directory will install packages for descendants (i think)
+RUN npm install 
+
+# This fixes EACCESS error on Linux
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
+# Build the project
+COPY ./ /app
+RUN npm i -g turbo
+RUN npm i -g del-cli
+
+EXPOSE 3500
+CMD ["npm", "run", "dev:frontend"]
