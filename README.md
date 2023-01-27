@@ -13,6 +13,9 @@ Stellection is a tag-based file organization system geared toward digital asset 
 - Language: Node.js (with a little bit of TypeScript)
 - Web Server: [Express](https://expressjs.com/)
 - Database ORM: [Sequelize](https://sequelize.org/)
+### Tooling
+- Monorepo & Building: [Turbo](https://turbo.build/)
+- Deployment: [Docker & Docker Compose](https://docker.com/)
 ### Other
 Stellection also includes other microservices that accomplish tasks for the backend, such as a machine learning-based tagging engine. These are still a work-in-progress.
 
