@@ -2,21 +2,20 @@ version: '3.7'
 services:
   frontend:
     build:
-      context: . # ./frontend
-      dockerfile: frontend/Dockerfile
+      context: .
+      dockerfile: apps/stllctn-frontend/Dockerfile.dev
     ports:
       - "3500:3500"
     stdin_open: true
     volumes:
       - ./:/app
       - /app/node_modules
-      - /app/frontend/node_modules
-#     - /app/backend/node_modules
-    command: npm run start
+      - /app/apps/stllctn-frontend/node_modules
+    command: npm run dev:frontend
   backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: apps/stllctn-backend/Dockerfile.dev
     environment:
       - SQL_HOST=postgres
       - SQL_USER=postgres
@@ -27,23 +26,24 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
-      - /app/backend/node_modules
+      - /app/apps/stllctn-backend/node_modules
     depends_on:
       - postgres
     restart: always
-    command: npm run dev:backend
+    entrypoint: ["/bin/bash", "./apps/stllctn-backend/scripts/entrypoint.sh"]
+    # command: npm run dev:backend
   # migration:
   #   build:
   #     context: .
-  #     dockerfile: backend/Dockerfile
+  #     dockerfile: apps/stllctn-backend/Dockerfile.dev
   #   command:
   #     [
-  #       "./backend/screipts/wait-for-it.sh",
-  #       "db:5432",
+  #       "./apps/stllctn-backend/scripts/wait-for-it.sh",
+  #       "127.0.0.1:5555",
   #       "--",
   #       "npm",
   #       "run",
-  #       "migrate:backend"
+  #       "migrate"
   #     ]
   #   links:
   #     - postgres
@@ -60,7 +60,7 @@ services:
   #   volumes:
   #     - ./:/app
   #     - /app/node_modules
-  #     - /app/backend/node_modules
+  #     - /app/stllctn-backend/node_modules
   postgres:
     image: 'postgres:12'
     environment:
@@ -68,9 +68,10 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=postgres
     ports:
-      - '5555:5432'
+      - '5555:5555'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    command: -p 5555
   # backend-python:
   #   build:
   #     context: .
