@@ -31,7 +31,7 @@ cd Stellection
 npm run up:build
 ```
 
-Run stack with build (in case of changed Dockerfile, docker-compose, or npm packages)
+Run stack with build (in case of changed Dockerfile, docker-compose, or npm packages). _You will have to build again if you install any new `npm` packages into any part of the repository._
 ```
 DEV: npm run up:build
 PROD: npm run up_prod:build
@@ -59,7 +59,7 @@ npm run clean:docker
 ```
 docker compose up
 ```
-You will have to build again if you install any new `npm` packages into any part of the repository.
+
 ```
 docker compose up --build
 ```
