@@ -18,11 +18,15 @@
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "turbo run build --filter=stllctn-frontend",
     "dev:frontend": "turbo run start --filter=stllctn-frontend",
-    "prod:frontend": "npm run build:frontend",
     "build:backend": "turbo run build --filter=stllctn-backend",
     "dev:backend": "turbo run dev --filter=stllctn-backend",
-    "prod:backend": "npm run build:backend",
-    "migrate": "cd apps/stllctn-backend && npx sequelize-cli db:migrate && cd ../.."
+    "prod:backend": "turbo run start --filter=stllctn-backend",
+    "migrate": "cd apps/stllctn-backend && npx sequelize-cli db:migrate && cd ../..",
+    "up:build": "docker-compose -f docker-compose.dev.yml up --build",
+    "up": "docker-compose -f docker-compose.dev.yml up",
+    "up_prod:build": "docker-compose -f docker-compose.yml up --build",
+    "up_prod": "docker-compose -f docker-compose.yml up",
+    "clean:docker": "docker system prune"
   },
   "repository": {
     "type": "git",

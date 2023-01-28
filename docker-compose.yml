@@ -1,0 +1,55 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/stllctn-frontend/Dockerfile.prod
+    ports:
+      - "3500:80"
+    stdin_open: true
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/stllctn-frontend/node_modules
+    # command: npm run dev:frontend
+    environment:
+      NODE_ENV: production
+  backend:
+    build:
+      context: .
+      dockerfile: apps/stllctn-backend/Dockerfile.prod
+    environment:
+      - SQL_HOST=postgres
+      - SQL_USER=postgres
+      - SQL_PASSWORD=password
+      - SQL_DATABASE=postgres
+      - NODE_ENV=production
+      - RUST_BACKTRACE=1
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/stllctn-backend/node_modules
+    depends_on:
+      - postgres
+    restart: always
+    entrypoint: ["/bin/sh", "./apps/stllctn-backend/scripts/entrypoint.sh"]
+    # command: npm run dev:backend      
+  postgres:
+    image: 'postgres:12'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - '5555:5555'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: -p 5555
+volumes:
+  cache:
+    driver: local
+  pgdata:
+
+

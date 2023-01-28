@@ -30,7 +30,7 @@ services:
     depends_on:
       - postgres
     restart: always
-    entrypoint: ["/bin/bash", "./apps/stllctn-backend/scripts/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "./apps/stllctn-backend/scripts/entrypoint.dev.sh"]
     # command: npm run dev:backend
   # migration:
   #   build:
