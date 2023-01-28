@@ -8,4 +8,4 @@ npx sequelize db:seed:all
 cd ../..
 echo
 echo Running Backend
-npm run prod:backend
+npm run backend

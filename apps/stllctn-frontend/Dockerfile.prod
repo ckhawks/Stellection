@@ -1,5 +1,7 @@
 FROM tarampampam/node:19-alpine as build
 
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 # Copy required metadata files
@@ -25,6 +27,8 @@ RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
 COPY ./ /app
 RUN npm i -g turbo
 RUN npm i -g del-cli
+
+RUN npm run build:frontend
 
 # EXPOSE 3500
 # CMD ["npm", "run", "dev:frontend"]

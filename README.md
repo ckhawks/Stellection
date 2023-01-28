@@ -28,7 +28,30 @@ Stellection also includes other microservices that accomplish tasks for the back
 ```
 git clone https://github.com/ckhawks/Stellection
 cd Stellection
-docker compose up --build
+npm run up:build
+```
+
+Run stack with build (in case of changed Dockerfile, docker-compose, or npm packages)
+```
+DEV: npm run up:build
+PROD: npm run up_prod:build
+```
+
+Run stack without build
+```
+DEV: npm run up
+PROD: npm run up_prod
+```
+
+Run frontend or backend solo for development
+```
+npm run frontend
+npm run backend
+```
+
+Clean hanging docker containers if you get a docker disk full error
+```
+npm run clean:docker
 ```
 
 
