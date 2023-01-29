@@ -34,11 +34,11 @@ const Footer = (props) => {
                                 <Tooltip text={gitInfo.commit.message} type="dark" placement="top" leaveDelay={50}>
                                     <GitCommitIcon size={20} className='icon'/>
                                     <Spacer inline w={.35} />
-                                    <Text small className="code-text">{gitInfo.commit.shortHash}</Text>
+                                    <Text small>{gitInfo.commit.shortHash}</Text>
                                     <Spacer inline w={1.5}/>
                                     <GitBranchIcon size={20} className='icon'/>
                                     <Spacer inline w={.35} />
-                                    <Text small className="code-text">{gitInfo.branch}</Text>
+                                    <Text small>{gitInfo.branch}</Text>
                                 </Tooltip>
                                 <Spacer inline w={1.5}/>
                                 <Tooltip text={longTime} type="dark" placement="top" leaveDelay={50}>

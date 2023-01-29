@@ -54,12 +54,14 @@ Clean hanging docker containers if you get a docker disk full error
 npm run clean:docker
 ```
 
-
-## Future
+## Unraid
+I am deploying this to my personal Unraid server. For my own notes, the deployment process is as follows:
 ```
-docker compose up
+ssh unraid
+cd /mnt/user/appdata/stellection
+git pull
 ```
-
-```
-docker compose up --build
-```
+In Unraid dashboard
+1. Find stellection-prod compose stack
+2. Update Stack
+3. Compose up
