@@ -30,9 +30,6 @@ RUN npm i -g del-cli
 
 RUN npm run build:frontend
 
-# EXPOSE 3500
-# CMD ["npm", "run", "dev:frontend"]
-
 FROM nginx:stable-alpine
 
 COPY --from=build /app/apps/stllctn-frontend/build /usr/share/nginx/html
