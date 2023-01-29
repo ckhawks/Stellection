@@ -2,8 +2,7 @@ import useSWR from 'swr';
 
 import { useState } from 'react';
 
-// const BASE_URL = process.env.BACKEND_API_URL;
-const BASE_URL = "http://127.0.0.1:5500";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 // https://refine.dev/blog/data-fetching-next-js-useswr/
 
@@ -19,7 +18,7 @@ const swrApi = async (payload) => {
       formData,
       // showError = true
     } = payload;
-    let url = `${BASE_URL}/${path}`;
+    let url = `${API_BASE_URL}/v1/${path}`;
     if (params) {
       const query = Object.keys(params)
         .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)

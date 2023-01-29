@@ -3,7 +3,7 @@ import { Collapse, Text, Card, Grid, Fieldset, Button, Image } from '@geist-ui/c
 import { useApi } from '../../hooks/useApi';
 
 const HomePage = (props) => {
-    const { data, error, isLoading } = useApi({path: "people", method: "get" });
+    const { data, error, isLoading } = useApi({path: "test/people", method: "get" });
     console.log("data: " + data);
     if(error) console.log("error: " + error);
     if(isLoading) console.log("loading");

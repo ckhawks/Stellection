@@ -5,6 +5,9 @@ import './index.css';
 import App from './App.js';
 import reportWebVitals from './reportWebVitals';
 
+// import .env SHITZ
+// require('dotenv').config();
+
 // bootstrap
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
