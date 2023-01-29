@@ -44,13 +44,13 @@ const NavbarMenu = (props) => {
                 </Popover.Item>
                 <Popover.Item line />
                 <Popover.Item>
-                    <Link href="#">Your profile</Link>
+                    <Link to="#">Your profile</Link>
                 </Popover.Item>
                 <Popover.Item>
-                    <Link color href="#">Settings</Link>
+                    <Link color to="#">Settings</Link>
                 </Popover.Item>
                 <Popover.Item>
-                    <Link color href="#">Admin settings</Link>
+                    <Link color to="#">Admin settings</Link>
                 </Popover.Item>
                 {/* <Popover.Item>
                     <span>Command-Line</span>
