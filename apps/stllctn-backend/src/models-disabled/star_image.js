@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import sequelize, { Sequelize } from 'sequelize';
 
 Star_Image = sequelize.define('star_image', {
     star_id: {

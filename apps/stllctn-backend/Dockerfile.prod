@@ -1,8 +1,9 @@
-FROM node:19-alpine
+FROM tarampampam/node:19-alpine
 
 # Fix turbo not running correctly
 # https://stackoverflow.com/questions/75174308/turbo-crashes-with-any-command-in-official-node-docker-image-alpine
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache bash
 # RUN apk update
 
 WORKDIR /app

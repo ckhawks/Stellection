@@ -3,6 +3,7 @@ FROM node:19-alpine
 # Fix turbo not running correctly
 # https://stackoverflow.com/questions/75174308/turbo-crashes-with-any-command-in-official-node-docker-image-alpine
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache bash
 # RUN apk update
 
 WORKDIR /app
@@ -29,5 +30,10 @@ RUN npm i -g ts-node-dev
 RUN npm i -g turbo
 RUN npm i -g del-cli
 
+# RUN chmod +x /app/apps/stllctn-backend/scripts/entrypoint.sh
+# RUN chmod +x /app/apps/stllctn-backend/scripts/wait-for-it.sh
+
 EXPOSE 5500
+
+
 

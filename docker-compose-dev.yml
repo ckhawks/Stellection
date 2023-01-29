@@ -11,7 +11,7 @@ services:
       - ./:/app
       - /app/node_modules
       - /app/apps/stllctn-frontend/node_modules
-    command: npm run dev:frontend
+    command: npm run frontend
   backend:
     build:
       context: .
@@ -21,16 +21,27 @@ services:
       - SQL_USER=postgres
       - SQL_PASSWORD=password
       - SQL_DATABASE=postgres
+      - SQL_PORT=5555
     ports:
       - "5500:5500"
     volumes:
       - ./:/app
       - /app/node_modules
       - /app/apps/stllctn-backend/node_modules
+      - ./data/stellection-data:/data
     depends_on:
       - postgres
     restart: always
-    entrypoint: ["/bin/sh", "./apps/stllctn-backend/scripts/entrypoint.sh"]
+    command: [
+      # this file must be chmod +x on YOUR COMPUTER
+        "./apps/stllctn-backend/scripts/wait-for-it.sh",
+        "postgres:5555",
+        "--",
+        "npm",
+        "run",
+        "entrypoint:backend"
+      ]
+      # ["bash", "./apps/stllctn-backend/scripts/wait-for-it.sh", "postgres:5555", "sh", "apps/stllctn-backend/scripts/entrypoint.sh"]
     # command: npm run dev:backend
   # migration:
   #   build:
@@ -70,7 +81,7 @@ services:
     ports:
       - '5555:5555'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./data/postgres-data:/var/lib/postgresql/data
     command: -p 5555
   # backend-python:
   #   build:
@@ -85,6 +96,5 @@ services:
 volumes:
   cache:
     driver: local
-  pgdata:
 
 

@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import sequelize, { Sequelize } from 'sequelize';
 
 R_Cluster_Star = sequelize.define('r_cluster_star', {
     cluster_id: {

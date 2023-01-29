@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import sequelize, { Model, Sequelize, INTEGER, DATE, NOW, TEXT, UUID, UUIDV4 } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   class User extends Model {

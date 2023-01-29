@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import sequelize, { Sequelize, INTEGER, DATE, NOW, TEXT, UUID, UUIDV4 } from 'sequelize';
 
 Stars = sequelize.define('stars', {
     star_id: {
