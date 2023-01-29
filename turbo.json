@@ -31,7 +31,7 @@
         "cache": false
       },
       "start": {
-        "dependsOn": ["^build"],
+        "dependsOn": ["^build", "build"],
         "outputs": [],
         "cache": false
       }
