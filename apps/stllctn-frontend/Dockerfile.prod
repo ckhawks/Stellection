@@ -1,6 +1,7 @@
 FROM node:19-alpine as build
 
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache git
 
 WORKDIR /app
 
