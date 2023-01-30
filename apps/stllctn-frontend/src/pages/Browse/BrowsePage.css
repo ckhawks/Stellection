@@ -1,0 +1,9 @@
+.browse-tags-list-item {
+  padding: 5px 5px 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.browse-tags-list-item:hover {
+  background-color: rgba(0,0,0,.05);
+}
