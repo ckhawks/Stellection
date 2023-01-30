@@ -5,6 +5,7 @@ jobs:
 
   build:
     name: Build
+    environment: Prod-Unraid
     runs-on: ubuntu-latest
     steps:
     - name: multiple command
