@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
 jobs:
 
-  build:
-    name: Build
+  pull-and-deploy:
+    name: Pull and Deploy
     environment: Prod-Unraid
     runs-on: ubuntu-latest
     steps:
-    - name: multiple command
+    - name: ssh that shit
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.UNRAID_SSH_HOST }}
@@ -17,5 +17,7 @@ jobs:
         # key: ${{ secrets.UNRAID_SSH_KEY }}
         port: ${{ secrets.UNRAID_SSH_PORT }}
         script: |
-          whoami
-          ls -al
+          cd /mnt/user/appdata/stellection
+          git pull
+          docker compose down
+          docker compose up --build -d
