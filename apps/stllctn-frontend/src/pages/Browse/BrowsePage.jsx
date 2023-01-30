@@ -39,6 +39,147 @@ const tags = [
   { id: 5, name: "memes", items: 443, public: false },
 ];
 
+const CreateClusterModalButton = (props) => {
+  const [createClusterModalVisible, setCreateClusterModalVisible] =
+    useState(false);
+  const createClusterButtonClickHandler = () => {
+    setCreateClusterModalVisible(true);
+    console.log("opening");
+  };
+  const createClusterModalCloseHandler = (event) => {
+    setCreateClusterModalVisible(false);
+    console.log("closed");
+  };
+  const createClusterModalCreateClickHandler = (event) => {
+    setCreateClusterModalProcessing(true);
+    setTimeout(() => {
+      setCreateClusterModalVisible(false);
+      setCreateClusterModalProcessing(false);
+    }, 1000);
+  };
+
+  const [createClusterModalProcesing, setCreateClusterModalProcessing] =
+    useState(false);
+
+  return (
+    <>
+      <Button
+        auto
+        icon={<PlusIcon />}
+        type="secondary"
+        style={{ marginLeft: "auto", marginRight: "5px" }}
+        onClick={createClusterButtonClickHandler}
+      >
+        Create
+      </Button>
+      <Modal
+        visible={createClusterModalVisible}
+        onClose={createClusterModalCloseHandler}
+      >
+        <Modal.Title
+          style={{
+            justifyContent: "flex-start",
+            textTransform: "unset",
+          }}
+        >
+          Create New Cluster
+        </Modal.Title>
+        <Spacer h={0.35} />
+        {/* <Modal.Subtitle style={{ textAlign: "left" }}>
+                  This is a modal
+                </Modal.Subtitle> */}
+        <Modal.Content
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            paddingBottom: "0px",
+          }}
+        >
+          <Text small pb={"7px"}>
+            Cluster Name
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Input
+              icon={<TagIcon />}
+              placeholder="tag-name"
+              width="100%"
+              height="40px"
+            />
+            {/* <Spacer inline w={0.5} />
+                    <Button type="secondary" width="100px" mb={"4px"}>
+                      Rename
+                    </Button> */}
+          </div>
+          <Spacer h={0.5} />
+          <Text small pb={"7px"}>
+            Cluster Visibility
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Spacer inline w={0.5} />
+            <EyeIcon />
+            <Spacer inline w={1} />
+            <Select
+              placeholder="Choose one"
+              initialValue={"1"}
+              onChange={undefined}
+              width="100%"
+              height="40px"
+              // icon={<EyeIcon />}
+            >
+              <Select.Option value="1">Public</Select.Option>
+              <Select.Option value="2">Private</Select.Option>
+            </Select>
+          </div>
+          <Spacer h={2} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Grid.Container gap={1}>
+              <Grid xs={12}>
+                <Button
+                  icon={<XIcon />}
+                  width="100%"
+                  type="secondary"
+                  onClick={createClusterModalCloseHandler}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid xs={12}>
+                <Button
+                  icon={<PlusIcon />}
+                  width="100%"
+                  type="success"
+                  loading={createClusterModalProcesing}
+                  onClick={createClusterModalCreateClickHandler}
+                >
+                  Create
+                </Button>
+              </Grid>
+            </Grid.Container>
+          </div>
+        </Modal.Content>
+      </Modal>
+    </>
+  );
+};
+
 const BrowseTagsListOld = (props) => {
   let navigate = useNavigate();
 
@@ -97,7 +238,7 @@ const BrowseTagsListOld = (props) => {
   );
 };
 
-const BrowseTagsList = () => {
+const BrowseClustersList = () => {
   let navigate = useNavigate();
 
   const onClusterClickHandler = (e, tag_id) => {
@@ -119,14 +260,7 @@ const BrowseTagsList = () => {
       >
         <Text h3>{tags.length} Clusters</Text>
         <Spacer inline w={1} />
-        <Button
-          auto
-          icon={<PlusIcon />}
-          type="secondary"
-          style={{ marginLeft: "auto", marginRight: "5px" }}
-        >
-          Create
-        </Button>
+        <CreateClusterModalButton />
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -194,16 +328,25 @@ const BrowseTagsList = () => {
                   }}
                 >
                   <Spacer inline w={0.5} />
-                  <Button icon={<Trash2Icon />} auto type="error" ghost>
-                    Delete
+                  <Button
+                    icon={<Trash2Icon />}
+                    auto
+                    type="error"
+                    ghost
+                    px={0.6}
+                  >
+                    {/* Delete */}
                   </Button>
                   <Spacer inline w={0.5} />
                   <Button
                     icon={<SettingsIcon />}
                     auto
                     onClick={settingsModalStateHandler}
+                    type="secondary"
+                    ghost
+                    px={0.6}
                   >
-                    Settings
+                    {/* Settings */}
                   </Button>
                 </div>
               </div>
@@ -336,7 +479,7 @@ const BrowsePage = (props) => {
           }
           value="1"
         >
-          {<BrowseTagsList />}
+          {<BrowseClustersList />}
         </Tabs.Item>
         <Tabs.Item
           label={
