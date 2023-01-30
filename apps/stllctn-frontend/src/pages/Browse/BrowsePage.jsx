@@ -151,7 +151,7 @@ const BrowseTagsList = () => {
                 }}
                 className="browse-tags-list-item"
               >
-                <TagIcon /> <Spacer inline w={0.5} /> {tag.name}
+                <TagIcon size={20} /> <Spacer inline w={0.5} /> {tag.name}
                 <Spacer inline w={1} />
                 <Text small type="secondary">
                   {tag.items} items
@@ -159,7 +159,6 @@ const BrowseTagsList = () => {
                 <Spacer inline w={1} />
                 {tag.public && (
                   <Tag
-                    invert
                     type="secondary"
                     style={{
                       display: "flex",
@@ -174,7 +173,6 @@ const BrowseTagsList = () => {
                 )}
                 {!tag.public && (
                   <Tag
-                    invert
                     type="secondary"
                     style={{
                       display: "flex",

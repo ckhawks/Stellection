@@ -4,6 +4,7 @@
     justify-content: center;
     color: rgba(0, 0, 0, .8);
     margin-top: 40px;
+    z-index: 15;
 }
 
 /* .container-regular {

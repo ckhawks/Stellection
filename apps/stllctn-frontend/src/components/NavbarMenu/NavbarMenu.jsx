@@ -35,7 +35,7 @@ const NavbarMenu = (props) => {
 
   const avatarPopoverContent = (
     <>
-      <div class="current-user-popover">
+      <div className="current-user-popover">
         <Popover.Item width={"auto"}>
           <UserIcon size={20} /> <Spacer inline w={0.35} />
           Signed in as <Spacer inline w={0.25} />

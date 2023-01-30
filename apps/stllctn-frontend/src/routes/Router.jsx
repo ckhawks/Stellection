@@ -58,7 +58,7 @@ const Router = () => {
             />
           </Route>
 
-          <Route element={<BaseLayout centered />}>
+          <Route element={<BaseLayout centered centerBackground />}>
             <Route
               path="login"
               element={<Page title="Login" children={<LoginPage />} />}
