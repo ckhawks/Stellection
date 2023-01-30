@@ -14,7 +14,7 @@ jobs:
         host: ${{ secrets.UNRAID_SSH_HOST }}
         username: ${{ secrets.UNRAID_SSH_USERNAME }}
         key: ${{ secrets.UNRAID_SSH_KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
+        passphrase: ${{ secrets.UNRAID_SSH_PASSPHRASE }}
         # password: ${{ secrets.UNRAID_SSH_PASSWORD }}
         # key: ${{ secrets.UNRAID_SSH_KEY }}
         port: ${{ secrets.UNRAID_SSH_PORT }}
