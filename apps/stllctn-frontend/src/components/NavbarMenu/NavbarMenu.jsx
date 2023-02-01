@@ -130,7 +130,7 @@ const NavbarMenu = (props) => {
                 onChange={navTabsChangeHandler}
                 value={url}
               >
-                <Tabs.Item label="Geist Test" value="geist-test" />
+                {/* <Tabs.Item label="Geist Test" value="geist-test" /> */}
               </Tabs>
             </div>
             <div className="navbar-middle">
@@ -143,7 +143,7 @@ const NavbarMenu = (props) => {
               >
                 <Tabs.Item label="Collect" value="collect" />
                 <Tabs.Item label="Organize" value="organize" />
-                <Tabs.Item label="Browse" value="browse" />
+                <Tabs.Item label="Browse" value="clusters" />
                 <Tabs.Item label="Gallery" value="gallery" />
               </Tabs>
             </div>

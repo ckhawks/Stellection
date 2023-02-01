@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useLocation, Link, useNavigate } from "react-router-dom"; // NavLink, redirect
+import { useLocation, Link, useNavigate, useParams } from "react-router-dom"; // NavLink, redirect
 
 import {
   Tabs,
@@ -459,7 +459,7 @@ const BrowseStarsList = () => {
       <Spacer h={2} />
       <Text h2>Stars</Text>
       <Text mt={0}>
-        Collected over time, stars are the individual files or images that
+        Collected over time, stars are the individual images or files that
         you've gathered into your solar system.
       </Text>
       <Spacer h={2} />
@@ -468,16 +468,38 @@ const BrowseStarsList = () => {
 };
 
 const BrowsePage = (props) => {
+  // const params = useParams();
+  const navigate = useNavigate();
+  const [browseNavTabsValue, setBrowseNavTabsValue] = useState("clusters");
+
+  useEffect(() => {
+    if (props.viewing === undefined) {
+      navigate("/clusters");
+    }
+    setBrowseNavTabsValue(props.viewing);
+  }, [props.viewing]);
+
+  const navTabsChangeHandler = (value) => {
+    navigate(value === "clusters" ? "/clusters" : "/stars");
+    console.log(value);
+  };
+
   return (
     <>
-      <Tabs initialValue="1" align="left" leftSpace={0}>
+      <Tabs
+        initialValue={browseNavTabsValue}
+        align="left"
+        leftSpace={0}
+        value={browseNavTabsValue}
+        onChange={navTabsChangeHandler}
+      >
         <Tabs.Item
           label={
             <>
               <TagIcon /> Clusters
             </>
           }
-          value="1"
+          value="clusters"
         >
           {<BrowseClustersList />}
         </Tabs.Item>
@@ -487,7 +509,7 @@ const BrowsePage = (props) => {
               <StarIcon /> Stars
             </>
           }
-          value="2"
+          value="stars"
         >
           {<BrowseStarsList />}
         </Tabs.Item>

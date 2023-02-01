@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 const userRoutes = require('./user.route');
 const tutorialRoutes = require('./tutorial.routes');
 const testRoutes = require('./test.route');
+const clusterRoutes = require('./cluster.route');
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router
 router.use('/users', userRoutes);
 router.use('/api/tutorials', tutorialRoutes )
 router.use('/test', testRoutes);
+router.use('/clusters', clusterRoutes);
 
 module.exports = router;

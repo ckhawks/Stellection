@@ -7,6 +7,13 @@ const PORT = process.env.PORT || 5500;
 
 const server = createServer(app);
 
+import * as slug from './utils/slug.js';
+
+// slug.testHashids();
+
+// Use for slug generation
+// https://hashids.org/
+
 // var corsOptions = {
 //   origin: "http://localhost:8081"
 // };
@@ -30,18 +37,14 @@ app.get("/", (req, res) => {
 // db stuff
 const db = require('./models/index.js');
 // console.log("db ", db);
-db.sequelize.sync({ force: true })
-  .then(() => {
-    console.log("Synced db.");
-  })
-  .catch((error) => {
-    console.log("Failed to sync db: " + error.message);
-  })
-
-// // force resync db
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and resync db.")
-// })
+// THIS DROPS TABLES DESTROYING DATA. IT SHOULD NEVER BE DONE IN PRODUCTION
+// db.sequelize.sync({ force: true })
+//   .then(() => {
+//     console.log("Synced db.");
+//   })
+//   .catch((error) => {
+//     console.log("Failed to sync db: " + error.message);
+//   })
 
 // add the routes in
 const routes = require('./routes');

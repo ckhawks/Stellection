@@ -7,14 +7,16 @@ module.exports = {
     "database": process.env.PG_DATABASE,
     "port": process.env.PG_PORT,
     "host": process.env.PG_HOST,
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
   },
   "test": {
     "username": "root",
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
   },
   "production": {
     "username": process.env.PG_USERNAME,
@@ -22,7 +24,8 @@ module.exports = {
     "database": process.env.PG_DATABASE,
     "port": process.env.PG_PORT,
     "host": process.env.PG_HOST,
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "seederStorage": "sequelize",
     // "username": "root",
     // "password": null,
     // "database": "database_production",

@@ -21,6 +21,8 @@ import BrowsePage from "../pages/Browse/BrowsePage";
 import GalleryPage from "../pages/Gallery/GalleryPage";
 import OrganizePage from "../pages/Organize/OrganizePage";
 import CollectPage from "../pages/Collect/CollectPage";
+import SingleStarPage from "../pages/Star/SingleStarPage";
+import SingleClusterPage from "../pages/Cluster/SingleClusterPage";
 
 import BaseLayout from "../pages/BaseLayout";
 import Page from "../pages/Page";
@@ -52,10 +54,42 @@ const Router = () => {
               path="collect"
               element={<Page title="Collect" children={<CollectPage />} />}
             />
-            <Route
+            {/* <Route
               path="browse"
               element={<Page title="Browse" children={<BrowsePage />} />}
-            />
+            /> */}
+            <Route path="clusters">
+              <Route
+                index
+                element={
+                  <Page
+                    title="Browse: Clusters"
+                    children={<BrowsePage viewing="clusters" />}
+                  />
+                }
+              />
+              <Route
+                path=":clusterId"
+                element={
+                  <Page title="Cluster" children={<SingleClusterPage />} />
+                }
+              />
+            </Route>
+            <Route path="stars">
+              <Route
+                path=""
+                element={
+                  <Page
+                    title="Browse: Stars"
+                    children={<BrowsePage viewing="stars" />}
+                  />
+                }
+              />
+              <Route
+                path=":starId"
+                element={<Page title="Star" children={<SingleStarPage />} />}
+              />
+            </Route>
           </Route>
 
           <Route element={<BaseLayout centered centerBackground />}>
