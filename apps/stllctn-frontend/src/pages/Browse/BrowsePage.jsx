@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import { useLocation, Link, useNavigate, useParams } from "react-router-dom"; // NavLink, redirect
 
+import { useApi, useApi2 } from "../../hooks/useApi";
+
 import {
   Tabs,
   Text,
@@ -14,6 +16,7 @@ import {
   Modal,
   Input,
   Select,
+  Textarea,
 } from "@geist-ui/core";
 
 import {
@@ -110,6 +113,28 @@ const CreateClusterModalButton = (props) => {
               placeholder="tag-name"
               width="100%"
               height="40px"
+            />
+            {/* <Spacer inline w={0.5} />
+                    <Button type="secondary" width="100px" mb={"4px"}>
+                      Rename
+                    </Button> */}
+          </div>
+          <Spacer h={0.5} />
+          <Text small pb={"7px"}>
+            Cluster Description (optional)
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Textarea
+              // icon={<TagIcon />}
+              placeholder="Describe your cluster..."
+              width="100%"
+              height="120px"
             />
             {/* <Spacer inline w={0.5} />
                     <Button type="secondary" width="100px" mb={"4px"}>
@@ -468,6 +493,27 @@ const BrowseStarsList = () => {
 };
 
 const BrowsePage = (props) => {
+  const { data: clusterData, isValidating: variable } = useApi({
+    path: "clusters",
+    method: "get",
+  });
+
+  const clusters = clusterData?.data || [];
+
+  // const { setToken, makeRequest } = useApi2();
+  // setToken("no token lol");
+
+  // const [clusters, setClusters] = useState([]);
+  // let request = {};
+
+  // useEffect(() => {
+  //   async () => {
+  //     request = await makeRequest({ path: "api/clusters", method: "get" });
+  //   };
+  // }, []);
+  // console.log("request", request);
+  // setClusters(request.data);
+
   // const params = useParams();
   const navigate = useNavigate();
   const [browseNavTabsValue, setBrowseNavTabsValue] = useState("clusters");
@@ -484,8 +530,35 @@ const BrowsePage = (props) => {
     console.log(value);
   };
 
+  // const { data: companiesGroupedByCategoryResponse, isValidating } = useApi<
+  //   GetCompaniesGroupedResponse,
+  //   undefined
+  // >({
+  //   path: GetCompaniesByCategory.getV1Path(),
+  //   method: GetCompaniesByCategory.method
+  // });
+
+  // const companiesGroupedByCategory =
+  //   companiesGroupedByCategoryResponse?.data || {};
+
   return (
     <>
+      <Text h1>cluster list temp2</Text>
+      {clusters &&
+        clusters.map((cluster) => {
+          return (
+            <div key={cluster.cluster_id}>
+              <Text>
+                cluster name: {cluster.cluster_name}
+                <br />
+              </Text>
+              <Text>
+                cluster id : {cluster.cluster_id}
+                <br />
+              </Text>
+            </div>
+          );
+        })}
       <Tabs
         initialValue={browseNavTabsValue}
         align="left"
