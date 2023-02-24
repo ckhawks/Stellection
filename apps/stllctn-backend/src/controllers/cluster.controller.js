@@ -174,7 +174,7 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-exports.addStarToCluster = async (req, res) => {
+exports.addStarToClusterOLDWATERFALL = async (req, res) => {
   const { clusterId, starId } = req.params;
   // console.log("params", starId, clusterId);
 
@@ -237,4 +237,71 @@ exports.addStarToCluster = async (req, res) => {
       });
       return;
     });
+};
+
+exports.addStarToCluster = async (req, res) => {
+  const { clusterId, starId } = req.params;
+
+  // search for cluster
+  const cluster = await Cluster.findByPk(clusterId).catch((err) => {
+    // console.log("err1", err);
+    res.status(500).send({
+      message: `Error retrieving Cluster with id: ${clusterId}`,
+    });
+    return;
+  });
+
+  // check if no cluster found
+  if (!cluster) {
+    res.status(404).send({
+      message: `Cannot find Cluster with id: ${clusterId}`,
+    });
+    return;
+  }
+
+  // search for star
+  const star = await db.Star.findByPk(starId).catch((err) => {
+    res.status(500).send({
+      message: `Error retrieving Star with id: ${starId}`,
+    });
+    return;
+  });
+
+  // check if no star found
+  if (!star) {
+    res.status(404).send({
+      message: `Cannot find Star with id: ${starId}`,
+    });
+    return;
+  }
+
+  // try add star to cluster
+  const cluster_star = await cluster.addStar(star).catch((err) => {
+    console.log("err3", err3);
+    res.status(500).send({
+      message: `Error adding Star id: ${starId} to Cluster id: ${clusterId} (2)`,
+    });
+    return;
+  });
+
+  // check if no cluster_star found
+  if (!cluster_star) {
+    // check if the cluster already has the star
+    const cluster_star = await cluster.getStars({ where: { star_id: starId } });
+    if (cluster_star) {
+      res.status(400).send({
+        message: `Error adding Star id: ${starId} to Cluster id: ${clusterId} (already exists) (3)`,
+      });
+      return;
+    }
+
+    // must have been an ERROR
+    res.status(500).send({
+      message: `Error adding Star id: ${starId} to Cluster id: ${clusterId} (1)`,
+    });
+    return;
+  }
+
+  // worked
+  res.send({ data: cluster_star });
 };
