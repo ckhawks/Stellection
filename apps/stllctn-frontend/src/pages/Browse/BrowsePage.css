@@ -7,3 +7,17 @@
 .browse-tags-list-item:hover {
   background-color: rgba(0,0,0,.05);
 }
+
+.star-id-indicator {
+  border-radius: 10%;
+  border: 1px solid rgba(0,0,0,.2);
+  text-align: center;
+  height: 20px !important;
+  width: 20px !important;
+  background-color: rgba(0,0,0,.05);
+  color: black !important;
+  padding: 10px;
+  vertical-align:auto;
+  line-height: 20px;
+  margin-right: 10px;
+}

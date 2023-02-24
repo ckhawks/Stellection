@@ -26,7 +26,8 @@
     "up_prod:build": "docker-compose -f docker-compose.yml up --build",
     "up_prod": "docker-compose -f docker-compose.yml up",
     "clean:docker": "docker system prune",
-    "entrypoint:backend": "/app/apps/stllctn-backend/scripts/entrypoint.sh"
+    "entrypoint:backend": "/app/apps/stllctn-backend/scripts/entrypoint.sh",
+    "entrypoint:backenddev": "/app/apps/stllctn-backend/scripts/entrypoint-dev.sh"
   },
   "repository": {
     "type": "git",

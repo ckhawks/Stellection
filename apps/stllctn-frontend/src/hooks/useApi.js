@@ -97,6 +97,29 @@ export function useApi2() {
   return { token, setToken, makeRequest };
 }
 
+// sendRequest('/api/stars', { method: "POST", token: null, body: { "body": "yes" } } )
+async function sendRequest(url, { method, token, body }) {
+  return fetch(url, {
+    method: method,
+    body: JSON.stringify(body),
+    // token: token
+  });
+}
+
+export function useApiWrite(params, path) {
+  let url = `${API_BASE_URL}/v1/${path}`;
+
+  const { trigger, data, error, reset, isMutating } = useSWRMutation(
+    path,
+    () => {
+      sendRequest(url, {});
+    },
+    (options = {})
+  );
+
+  return { trigger, data, error, reset, isMutating };
+}
+
 // const { setToken } = useApi();
 // const { makeRequest } = useApi();
 

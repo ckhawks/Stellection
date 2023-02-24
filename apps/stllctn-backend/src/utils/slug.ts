@@ -34,7 +34,7 @@ export function testHashids(): void {
 export function getDestinationFromSlug(slug: string): string {
   let slug_id = convertSlugToSlugId(slug);
   
-  return "";
+  return "hey"
 }
 
 
