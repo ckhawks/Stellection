@@ -59,4 +59,7 @@ db.Cluster = require("./cluster.model")(sequelize, Sequelize);
 db.User = require("./user.model")(sequelize, Sequelize);
 db.Star = require("./star.model")(sequelize, Sequelize);
 
+db.Cluster.associate(db);
+db.Star.associate(db);
+
 module.exports = db;

@@ -39,7 +39,18 @@ exports.findAll = (req, res) => {
   const name = req.query.name;
   var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  Cluster.findAll({ where: condition })
+  Cluster.findAll({
+    where: condition,
+    include: [
+      {
+        model: db.Star,
+        as: "stars",
+        // through: { attributes: ["created_at"], as: "cluster_star" },
+        through: { attributes: [] },
+        attributes: ["star_id", "star_title"],
+      },
+    ],
+  })
     .then((data) => {
       res.send({ data: data });
     })
@@ -53,7 +64,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const id = req.params.clusterId;
 
   Cluster.findByPk(id)
     .then((data) => {
@@ -74,7 +85,7 @@ exports.findOne = (req, res) => {
 
 // Update a cluster by the id in the request
 exports.update = (req, res) => {
-  const id = req.params.id;
+  const id = req.params.clusterId;
 
   Cluster.update(req.body, {
     where: { id: id },
@@ -99,7 +110,18 @@ exports.update = (req, res) => {
 };
 
 exports.findAllPublic = (req, res) => {
-  Cluster.findAll({ where: { public: true } })
+  Cluster.findAll({
+    where: { public: true },
+    include: [
+      {
+        model: db.Star,
+        as: "stars",
+        // through: { attributes: ["created_at"], as: "cluster_star" },
+        through: { attributes: [] },
+        attributes: ["star_id", "star_title"],
+      },
+    ],
+  })
     .then((data) => {
       res.send(data);
     })
@@ -112,7 +134,7 @@ exports.findAllPublic = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const id = req.params.clusterId;
 
   Cluster.destroy({
     where: { id: id },
@@ -149,5 +171,70 @@ exports.deleteAll = (req, res) => {
         message:
           err.message || "Some error occurrred while removing all clusters.",
       });
+    });
+};
+
+exports.addStarToCluster = async (req, res) => {
+  const { clusterId, starId } = req.params;
+  // console.log("params", starId, clusterId);
+
+  await Cluster.findByPk(clusterId)
+    .then(async (cluster) => {
+      if (cluster) {
+        // successfully found cluster
+        // console.log("data1:", cluster);
+
+        // locate star by id
+        await db.Star.findByPk(starId)
+          .then(async (star) => {
+            if (!star) {
+              res.status(500).send({
+                message: `Error retrieving Star with id: ${starId} (1)`,
+              });
+              return;
+            }
+            // console.log("data2:", star);
+            // add star to cluster
+            await cluster
+              .addStar(star)
+              .then((cluster_star) => {
+                // console.log("data3:", cluster_star);
+                if (!cluster_star) {
+                  res.status(500).send({
+                    message: `Error adding Star id: ${starId} to Cluster id: ${clusterId} (likely already exists) (1)`,
+                  });
+                  return;
+                }
+                res.send({ data: cluster_star });
+                return;
+              })
+              .catch((err3) => {
+                console.log("err3", err3);
+                res.status(500).send({
+                  message: `Error adding Star id: ${starId} to Cluster id: ${clusterId} (2)`,
+                });
+                return;
+              });
+          })
+          .catch((err2) => {
+            console.log("err2", err2);
+            res.status(500).send({
+              message: `Error retrieving Star with id: ${starId} (2)`,
+            });
+            return;
+          });
+      } else {
+        res.status(404).send({
+          message: `Cannot find Cluster with id: ${clusterId}`,
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log("err1", err);
+      res.status(500).send({
+        message: `Error retrieving Cluster with id: ${clusterId}`,
+      });
+      return;
     });
 };

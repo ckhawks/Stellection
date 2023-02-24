@@ -44,5 +44,13 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
 
+  Cluster.associate = (models) => {
+    Cluster.belongsToMany(models.Star, {
+      through: "Cluster_Star",
+      as: "stars",
+      foreignKey: "cluster_id",
+    });
+  };
+
   return Cluster;
 };

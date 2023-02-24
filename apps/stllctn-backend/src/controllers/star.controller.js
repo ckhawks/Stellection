@@ -1,3 +1,4 @@
+const { default: cluster } = require("cluster");
 const db = require("../models/index.js");
 const Star = db.Star;
 const Op = db.Sequelize.Op;
@@ -35,7 +36,18 @@ exports.findAll = (req, res) => {
   const name = req.query.name;
   var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  Star.findAll({ where: condition })
+  Star.findAll({
+    where: condition,
+    include: [
+      {
+        model: db.Cluster,
+        as: "clusters",
+        // through: { attributes: ["created_at"], as: "cluster_star" },
+        through: { attributes: [] },
+        attributes: ["cluster_id", "cluster_name", "public"],
+      },
+    ],
+  })
     .then((data) => {
       res.send({ data: data });
     })
@@ -49,9 +61,18 @@ exports.findAll = (req, res) => {
 
 // Retrieve a single star by id
 exports.findOne = (req, res) => {
-  const id = req.params.id;
+  const id = req.params.starId;
 
-  Star.findByPk(id)
+  Star.findByPk(id, {
+    include: [
+      {
+        model: db.Cluster,
+        through: { attributes: [] },
+        as: "clusters",
+        attributes: ["cluster_id", "cluster_name", "public"],
+      },
+    ],
+  })
     .then((data) => {
       if (data) {
         res.send(data);
