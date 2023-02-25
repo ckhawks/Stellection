@@ -6,25 +6,56 @@ import {
   Fieldset,
   Button,
   Image,
+  Display,
 } from "@geist-ui/core";
+
+import { useNavigate } from "react-router-dom"; // NavLink, redirect
 
 import { useApi } from "../../hooks/useApi";
 
+import StellectionLogo from "../../assets/images/Logo.svg";
+
 const HomePage = (props) => {
-  const { data, error, isLoading } = useApi({
-    path: "test/people",
-    method: "get",
-  });
-  console.log("data: " + data);
-  if (error) console.log("error: " + error);
-  if (isLoading) console.log("loading");
+  // const { data, error, isLoading } = useApi({
+  //   path: "test/people",
+  //   method: "get",
+  // });
+  // console.log("data: " + data);
+  // if (error) console.log("error: " + error);
+  // if (isLoading) console.log("loading");
+
+  let navigate = useNavigate();
 
   return (
     <>
-      <Text h1>Collect</Text>
-      content
-      <br />
-      content
+      <Display shadow caption="Your new favorite way to collect media.">
+        <Image
+          width="435px"
+          height="200px"
+          src={StellectionLogo}
+          paddingLeft="30px"
+          paddingRight="30px"
+        />
+      </Display>
+      {/* <Text h1>Stellection</Text> */}
+      <Text>
+        Welcome to Stellection: your new favorite way to aggregate your media,
+        whether for sharing creative reference or saving a list of bookmarks.{" "}
+      </Text>
+      <Text>
+        Currently, access is limited to only a whitelisted group of users. If
+        you've received an access code, you can register now.
+      </Text>
+      <Button
+        auto
+        type="secondary"
+        onClick={() => {
+          navigate("/register");
+        }}
+      >
+        Register
+      </Button>
+      {/* content
       <br />
       content
       <br />
@@ -219,7 +250,7 @@ const HomePage = (props) => {
             aliquip ex ea commodo consequat.
           </Text>
         </Collapse>
-      </Collapse.Group>
+      </Collapse.Group> */}
     </>
   );
 };

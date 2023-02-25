@@ -36,4 +36,8 @@ router.delete("/:clusterId", cluster.delete);
 // POST /api/clusters/27/stars/2
 router.post("/:clusterId/stars/:starId", cluster.addStarToCluster);
 
+// Remove star from cluster
+// DELETE /api/clusters/27/stars/2
+router.delete("/:clusterId/stars/:starId", cluster.deleteStarFromCluster);
+
 module.exports = router;
