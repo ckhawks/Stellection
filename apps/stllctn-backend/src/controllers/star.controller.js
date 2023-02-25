@@ -135,6 +135,7 @@ exports.findOne = async (req, res) => {
           },
           limit: 1,
           plain: true,
+          order: [["star_id", "ASC"]],
         });
 
         const prev = await Star.findAll({
@@ -146,6 +147,7 @@ exports.findOne = async (req, res) => {
           },
           limit: 1,
           plain: true,
+          order: [["star_id", "DESC"]],
         });
 
         // plain: true because https://stackoverflow.com/a/71090541
