@@ -35,8 +35,12 @@ module.exports = (sequelize, Sequelize) => {
       as: "clusters",
       foreignKey: "star_id",
     });
-    Star.hasOne(models.StarImage);
-    Star.hasOne(models.StarText);
+    Star.hasOne(models.StarImage, {
+      foreignKey: "star_id",
+    });
+    Star.hasOne(models.StarText, {
+      foreignKey: "star_id",
+    });
   };
 
   return Star;

@@ -21,16 +21,15 @@ const ALLOWED_MIMETYPES = [
   "image/webp",
 ];
 
-const createStarImage = (req, res) => {
-  // Write image to file system
-  // Write File record, get file_id
+const createStarImage = async (req, res) => {
   // Write Star record, get star_id, relate to starimage_id
   // Write StarImage record, get starimage_id, relate to file_id
 
+  // Write image to file system
   try {
     // check if files included in request
     if (!req.files) {
-      res.status(400).send({
+      await res.status(400).send({
         status: false,
         message: "No file(s) were uploaded.",
       });
@@ -42,7 +41,7 @@ const createStarImage = (req, res) => {
 
     // check mimetype of files
     if (!ALLOWED_MIMETYPES.includes(image.mimetype)) {
-      res.status(400).send({
+      await res.status(400).send({
         status: false,
         message: "File format not allowed. " + image.mimetype,
       });
@@ -57,8 +56,30 @@ const createStarImage = (req, res) => {
     // Use the mv() method to place the file in the upload directory
     image.mv(BASE_FILE_DIR + new_filepath);
 
+    // Write File record, get file_id
+    const file = await db.File.create({
+      md5_hash: hash,
+      file_path: new_filepath,
+      original_name: image.name,
+    });
+
+    console.log("file", file);
+
+    const star = await db.Star.create({
+      star_title: image.name,
+    });
+
+    console.log("star", star);
+
+    const starImage = await db.StarImage.create({
+      file_id: file.file_id,
+      star_id: star.star_id,
+    });
+
+    console.log("starimage", starImage);
+
     // Send response
-    res.send({
+    await res.send({
       status: true,
       message: "File is uploaded",
       data: {
@@ -66,6 +87,9 @@ const createStarImage = (req, res) => {
         mimetype: image.mimetype,
         size: image.size,
         location: BASE_FILE_DIR + new_filepath,
+        star_id: star.star_id,
+        starimage_id: starImage.starimage_id,
+        file_id: file.file_id,
         // there's also an image.data property with the buffer representation of the image
       },
     });
@@ -279,6 +303,75 @@ exports.findOne = async (req, res) => {
       res.status(500).send({
         message: `Error retrieving Star with id: ${id}`,
       });
+    });
+};
+
+exports.findOneResource = async (req, res) => {
+  const id = req.params.starId;
+
+  await Star.findByPk(id, {
+    include: [
+      {
+        model: db.StarImage,
+        attributes: ["starimage_id"],
+        // where: { star_id: star_id },
+        required: false,
+        include: [
+          {
+            model: db.File,
+            // attributes: ['file_id', 'original_filename']
+          },
+        ],
+      },
+      {
+        model: db.StarText,
+        // as: "startext",
+        attributes: ["startext_id"],
+        // where: { star_id: star_id },
+        required: false,
+        include: [
+          {
+            model: db.File,
+            // as: "file",
+            // attributes: ['file_id', 'original_filename']
+          },
+        ],
+      },
+    ],
+  })
+    .then(async (data) => {
+      // star not found
+      if (!data) {
+        await res.status(404).send({
+          message: `Cannot find Star with id: ${id}`,
+        });
+        return;
+      }
+
+      // console.log(data);
+      // console.log(data.StarImage);
+
+      // console.log(starContent);
+
+      // res.send(data);
+      res.sendFile(data.StarImage.File.file_path, { root: BASE_FILE_DIR });
+
+      // res.download(
+      //   data.StarImage.File.file_path,
+      //   data.StarImage.File.original_name,
+      //   { root: BASE_FILE_DIR }
+      // );
+
+      // return associated content from star
+
+      // express how serve file as filename ?
+    })
+    .catch(async (err) => {
+      console.log(err);
+      await res.status(500).send({
+        message: `Error retrieving Star with id: ${id}`,
+      });
+      return;
     });
 };
 

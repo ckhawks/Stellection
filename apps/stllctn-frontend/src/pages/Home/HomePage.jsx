@@ -55,6 +55,10 @@ const HomePage = (props) => {
       >
         Register
       </Button>
+      <Image
+        src="http://localhost:5500/v1/stars/35/resource"
+        width="300px"
+      ></Image>
       {/* content
       <br />
       content

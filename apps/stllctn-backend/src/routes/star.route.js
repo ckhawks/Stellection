@@ -20,6 +20,10 @@ router.post("/", star.create);
 // GET /api/stars/27
 router.get("/:starId", star.findOne);
 
+// Get a single star by ID's content/data/resource/file
+// GET /api/stars/27/resource
+router.get("/:starId/resource", star.findOneResource);
+
 // Update a star by ID
 // PATCH /api/stars/27
 // router.patch("/:starId", star.update);

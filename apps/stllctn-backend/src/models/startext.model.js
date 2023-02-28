@@ -42,8 +42,12 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   StarText.associate = (models) => {
-    StarText.belongsTo(models.Star);
-    StarText.hasOne(models.File);
+    StarText.belongsTo(models.Star, {
+      foreignKey: "star_id",
+    });
+    StarText.hasOne(models.File, {
+      foreignKey: "file_id",
+    });
   };
 
   return StarText;

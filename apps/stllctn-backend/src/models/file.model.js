@@ -25,8 +25,12 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   File.associate = (models) => {
-    File.belongsTo(models.StarImage);
-    File.belongsTo(models.StarText);
+    File.belongsTo(models.StarImage, {
+      foreignKey: "file_id",
+    });
+    File.belongsTo(models.StarText, {
+      foreignKey: "file_id",
+    });
   };
 
   return File;

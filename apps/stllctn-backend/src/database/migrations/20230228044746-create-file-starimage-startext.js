@@ -48,6 +48,23 @@ module.exports = {
         },
         file_id: {
           type: Sequelize.INTEGER,
+          references: {
+            model: {
+              tableName: "File",
+            },
+            key: "file_id",
+          },
+          allowNull: false,
+        },
+        star_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: {
+              tableName: "Star",
+            },
+            key: "star_id",
+          },
+          allowNull: false,
         },
         created_at: {
           allowNull: false,
@@ -76,6 +93,23 @@ module.exports = {
         },
         file_id: {
           type: Sequelize.INTEGER,
+          references: {
+            model: {
+              tableName: "File",
+            },
+            key: "file_id",
+          },
+          allowNull: false,
+        },
+        star_id: {
+          type: Sequelize.INTEGER,
+          references: {
+            model: {
+              tableName: "Star",
+            },
+            key: "star_id",
+          },
+          allowNull: false,
         },
         text_type: {
           type: Sequelize.STRING,

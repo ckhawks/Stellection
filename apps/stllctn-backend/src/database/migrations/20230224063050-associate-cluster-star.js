@@ -17,10 +17,24 @@ module.exports = {
         cluster_id: {
           type: Sequelize.INTEGER,
           primaryKey: true,
+          references: {
+            model: {
+              tableName: "Cluster",
+            },
+            key: "cluster_id",
+          },
+          allowNull: false,
         },
         star_id: {
           type: Sequelize.INTEGER,
           primaryKey: true,
+          references: {
+            model: {
+              tableName: "Star",
+            },
+            key: "star_id",
+          },
+          allowNull: false,
         },
         created_at: {
           allowNull: false,
