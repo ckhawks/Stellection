@@ -28,6 +28,7 @@ db-data
 /e2e_tests/cypress/videos/
 /e2de_tests/node_modules
 
+uploads/
 
 # production
 /build

@@ -1,6 +1,8 @@
 const { createServer } = require("http");
 const express = require("express");
+const fileUpload = require('express-fileupload'); // Simple Express middleware for uploading files. It parses multipart/form-data requests, extracts the files if available, and makes them available under the req.files property.
 const cors = require("cors");
+const morgan = require('morgan'); // Node.js middleware for logging HTTP requests.
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -24,6 +26,13 @@ import * as slug from "./utils/slug";
 
 // add cors
 app.use(cors());
+
+// enable files upload
+app.use(fileUpload({
+  createParentPath: true
+}));
+
+app.use(morgan('dev'));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));

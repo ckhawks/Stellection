@@ -2,17 +2,80 @@ const { default: cluster } = require("cluster");
 const db = require("../models/index.js");
 const Star = db.Star;
 const Op = db.Sequelize.Op;
+const _ = require("lodash"); //  A JavaScript library that provides utility functions for arrays, numbers, objects, strings, etc.
+const crypto = require("crypto");
+const path = require("path");
 
-// Create and save a star
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.star_title) {
-    res.status(400).send({
-      message: "Must define a name for the star",
+import { md5HashFromBinaryLike } from "../utils/hash";
+import { getFileLocationStringFromHashString } from "../utils/files";
+
+// {
+//   type: "image" / "text"
+// }
+
+const BASE_FILE_DIR = "/data/stellection-data/files/";
+const ALLOWED_MIMETYPES = [
+  "image/png",
+  "image/gif",
+  "image/jpeg",
+  "image/webp",
+];
+
+const createStarImage = (req, res) => {
+  // Write image to file system
+  // Write File record, get file_id
+  // Write Star record, get star_id, relate to starimage_id
+  // Write StarImage record, get starimage_id, relate to file_id
+
+  try {
+    // check if files included in request
+    if (!req.files) {
+      res.status(400).send({
+        status: false,
+        message: "No file(s) were uploaded.",
+      });
+      return;
+    }
+
+    // Use the name of the input field (aka image) to retrieve the uploaded file
+    let image = req.files.image;
+
+    // check mimetype of files
+    if (!ALLOWED_MIMETYPES.includes(image.mimetype)) {
+      res.status(400).send({
+        status: false,
+        message: "File format not allowed. " + image.mimetype,
+      });
+      return;
+    }
+
+    const hash = md5HashFromBinaryLike(image.data);
+    const file_extension = path.extname(image.name);
+    let new_filepath =
+      getFileLocationStringFromHashString(hash) + hash + file_extension;
+
+    // Use the mv() method to place the file in the upload directory
+    image.mv(BASE_FILE_DIR + new_filepath);
+
+    // Send response
+    res.send({
+      status: true,
+      message: "File is uploaded",
+      data: {
+        name: image.name,
+        mimetype: image.mimetype,
+        size: image.size,
+        location: BASE_FILE_DIR + new_filepath,
+        // there's also an image.data property with the buffer representation of the image
+      },
     });
-    return;
+  } catch (err) {
+    res.status(500).send(err);
   }
+};
 
+// TODO change this to use StarText
+const createStarText = (req, res) => {
   // Define the star
   const star = {
     star_title: req.body.star_title,
@@ -28,6 +91,38 @@ exports.create = (req, res) => {
         message: err.message || "Some error occurred while creating the Star.",
       });
     });
+};
+
+// Create and save a star
+exports.create = (req, res) => {
+  // Validate request
+  if (!req.body.star_title) {
+    res.status(400).send({
+      message: "Must define a name for the star",
+    });
+    return;
+  }
+
+  if (!req.body.star_type) {
+    res.status(400).send({
+      message: "Must define a type for the star",
+    });
+    return;
+  }
+
+  switch (req.body.star_type) {
+    case "image":
+      createStarImage(req, res);
+      return;
+    case "text":
+      createStarText(req, res);
+      return;
+    default:
+      res.status(400).send({
+        message: "Unable to handle provided star_type.",
+      });
+      return;
+  }
 };
 
 // Retrieve all stars from the database
