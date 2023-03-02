@@ -1,5 +1,5 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Button, Checkbox, Text, Spacer } from "@geist-ui/core";
+import { Button, Checkbox, Text, Spacer, Image } from "@geist-ui/core";
 import { useEffect } from "react";
 
 import { useState } from "react";
@@ -37,7 +37,9 @@ const SingleStarPage = (_props: any) => {
     prev: {
       star_id: number,
     } | null,
-    clusters: Cluster[]
+    clusters: Cluster[],
+    star_type: string,
+    resource: string
   } = starData?.data || {
     // star_title: "",
     // star_id: 0,
@@ -238,7 +240,10 @@ const SingleStarPage = (_props: any) => {
           <b>STAR PAGE</b>
           StarId search: {params.starId}<br/>
           StarId found: {star?.star_id}<br/>
-          <Text h1>Star title: {star?.star_title}</Text><br/>
+          <Text h1>{star?.star_title}</Text><br/>
+          { star.star_type === "IMAGE" && (
+            <Image src={star.resource}></Image>
+          )}
           {/* <Button onClick={() => {useNavigate()}}>Next</Button> */}
           { star?.prev !== null && (<Link to={"/stars/" + star?.prev?.star_id}>Previous Star</Link> )}<br/>
           { star?.next !== null && (<Link to={"/stars/" + star?.next?.star_id}>Next Star</Link>)}<br/>
