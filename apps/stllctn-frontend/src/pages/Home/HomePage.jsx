@@ -7,6 +7,7 @@ import {
   Button,
   Image,
   Display,
+  Spacer,
 } from "@geist-ui/core";
 
 import { useNavigate } from "react-router-dom"; // NavLink, redirect
@@ -55,9 +56,10 @@ const HomePage = (props) => {
       >
         Register
       </Button>
+      <Spacer h={1} />
       <Image
         src="http://localhost:5500/v1/stars/35/resource"
-        width="300px"
+        width="auto"
       ></Image>
       {/* content
       <br />

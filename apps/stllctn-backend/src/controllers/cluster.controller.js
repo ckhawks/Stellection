@@ -66,7 +66,17 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.clusterId;
 
-  Cluster.findByPk(id)
+  Cluster.findByPk(id, {
+    include: [
+      {
+        model: db.Star,
+        as: "stars",
+        // through: { attributes: ["created_at"], as: "cluster_star" },
+        through: { attributes: [] },
+        attributes: ["star_id", "star_title"],
+      },
+    ],
+  })
     .then((data) => {
       if (data) {
         res.send(data);

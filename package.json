@@ -44,6 +44,7 @@
     "apps/*"
   ],
   "dependencies": {
+    "@types/express-fileupload": "^1.4.1",
     "dotenv": "^16.0.3"
   }
 }

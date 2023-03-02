@@ -256,7 +256,7 @@ const SingleStarPage = (_props: any) => {
 
             return (
               <div key={cluster.cluster_id}>
-                <Checkbox checked={cluster.active} type="default" onChange={(e) => {
+                <Checkbox checked={cluster.active} type="default" scale={1.25} onChange={(e) => {
                   clusterCheckboxChangeHandler(cluster.cluster_id, e.target.checked);
                 }}>{cluster.cluster_name}</Checkbox>
                 {/* <Spacer h={.5} /> */}

@@ -23,6 +23,7 @@ router.get("/:starId", star.findOne);
 // Get a single star by ID's content/data/resource/file
 // GET /api/stars/27/resource
 router.get("/:starId/resource", star.findOneResource);
+router.get("/:starId/resource/:fakeFilename", star.findOneResource);
 
 // Update a star by ID
 // PATCH /api/stars/27

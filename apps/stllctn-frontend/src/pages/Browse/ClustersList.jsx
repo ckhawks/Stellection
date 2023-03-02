@@ -308,6 +308,212 @@ const CreateClusterModalButton = (props) => {
   );
 };
 
+const ClustersListItem = (props) => {
+  const cluster = props.cluster;
+
+  let navigate = useNavigate();
+  function onClickTagsListItem(cluster_id) {
+    navigate("/clusters/" + cluster_id);
+  }
+
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+  const settingsModalStateHandler = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSettingsModalVisible(true);
+  };
+
+  const settingsModalCloseHandler = (event) => {
+    setSettingsModalVisible(false);
+    console.log("closed");
+  };
+
+  const [deleteModalVisible, setDeleteModalVisible] = useState({});
+  const deleteModalStateHandler = (e, clusterId) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setDeleteModalVisible({ ...deleteModalVisible, [clusterId]: true });
+  };
+
+  return (
+    <React.Fragment>
+      <div
+        key={cluster.cluster_name}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+        className="browse-tags-list-item"
+        onClick={() => {
+          onClickTagsListItem(cluster.cluster_id);
+        }}
+      >
+        <TagIcon size={20} /> <Spacer inline w={0.5} /> {cluster.cluster_name}
+        <Spacer inline w={1} />
+        {/* Item count indicator */}
+        <Text small type="secondary">
+          {/* {cluster.items} items */}
+        </Text>
+        <Spacer inline w={1} />
+        {/* Visibility indicator */}
+        {cluster.public && (
+          <Tag
+            type="secondary"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <EyeIcon size={16} />
+            <Spacer inline w={0.35} />
+            Public
+          </Tag>
+        )}
+        {!cluster.public && (
+          <Tag
+            type="secondary"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <EyeOffIcon size={16} />
+            <Spacer inline w={0.35} />
+            Private
+          </Tag>
+        )}
+        {/* Right-aligned Icon buttons */}
+        <div
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Spacer inline w={0.5} />
+          <Button
+            icon={<Trash2Icon />}
+            auto
+            onClick={(e) => deleteModalStateHandler(e, cluster.cluster_id)}
+            type="error"
+            ghost
+            px={0.6}
+          >
+            {/* Delete */}
+          </Button>
+          <Spacer inline w={0.5} />
+          <Button
+            icon={<SettingsIcon />}
+            auto
+            onClick={(e) => settingsModalStateHandler(e, cluster.cluster_id)}
+            type="secondary"
+            ghost
+            px={0.6}
+          >
+            {/* Settings */}
+          </Button>
+        </div>
+      </div>
+      <Divider />
+      <Modal visible={settingsModalVisible} onClose={settingsModalCloseHandler}>
+        <Modal.Title
+          style={{
+            justifyContent: "flex-start",
+            textTransform: "unset",
+          }}
+        >
+          Editing <Spacer inline w={0.35} />
+          <b>{cluster.cluster_name}</b>
+        </Modal.Title>
+        <Spacer h={0.35} />
+        {/* <Modal.Subtitle style={{ textAlign: "left" }}>
+          This is a modal
+        </Modal.Subtitle> */}
+        <Modal.Content
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            paddingBottom: "0px",
+          }}
+        >
+          <Text small pb={"7px"}>
+            Rename Cluster
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Input
+              icon={<TagIcon />}
+              placeholder={cluster.cluster_name}
+              width="100%"
+              height="40px"
+            />
+            {/* <Spacer inline w={0.5} />
+            <Button type="secondary" width="100px" mb={"4px"}>
+              Rename
+            </Button> */}
+          </div>
+          <Spacer h={0.5} />
+          <Text small pb={"7px"}>
+            Change Visibility
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Spacer inline w={0.5} />
+            <EyeIcon />
+            <Spacer inline w={1} />
+            <Select
+              placeholder="Choose one"
+              initialValue={cluster.public ? "1" : "2"}
+              onChange={undefined}
+              width="100%"
+              height="40px"
+              // icon={<EyeIcon />}
+            >
+              <Select.Option value="1">Public</Select.Option>
+              <Select.Option value="2">Private</Select.Option>
+            </Select>
+          </div>
+          <Spacer h={2} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Grid.Container gap={1}>
+              <Grid xs={12}>
+                <Button icon={<XIcon />} width="100%" type="secondary">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid xs={12}>
+                <Button icon={<SaveIcon />} width="100%" type="success">
+                  Save
+                </Button>
+              </Grid>
+            </Grid.Container>
+          </div>
+        </Modal.Content>
+      </Modal>
+    </React.Fragment>
+  );
+};
+
 const ClustersList = () => {
   const { data: clusterData, isValidating: variable } = useApi({
     path: "clusters",
@@ -343,13 +549,6 @@ const ClustersList = () => {
         }, { revalidate: false })
     */
 
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
-  const settingsModalStateHandler = () => setSettingsModalVisible(true);
-  const settingsModalCloseHandler = (event) => {
-    setSettingsModalVisible(false);
-    console.log("closed");
-  };
-
   return (
     <>
       <Spacer h={2} />
@@ -371,181 +570,7 @@ const ClustersList = () => {
         <Divider />
         {clusters.map((cluster) => {
           return (
-            <React.Fragment key={cluster.cluster_id}>
-              <div
-                key={cluster.cluster_name}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-                className="browse-tags-list-item"
-              >
-                <TagIcon size={20} /> <Spacer inline w={0.5} />{" "}
-                {cluster.cluster_name}
-                <Spacer inline w={1} />
-                {/* Item count indicator */}
-                <Text small type="secondary">
-                  {/* {cluster.items} items */}
-                </Text>
-                <Spacer inline w={1} />
-                {/* Visibility indicator */}
-                {cluster.public && (
-                  <Tag
-                    type="secondary"
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <EyeIcon size={16} />
-                    <Spacer inline w={0.35} />
-                    Public
-                  </Tag>
-                )}
-                {!cluster.public && (
-                  <Tag
-                    type="secondary"
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <EyeOffIcon size={16} />
-                    <Spacer inline w={0.35} />
-                    Private
-                  </Tag>
-                )}
-                {/* Right-aligned Icon buttons */}
-                <div
-                  style={{
-                    marginLeft: "auto",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Spacer inline w={0.5} />
-                  <Button
-                    icon={<Trash2Icon />}
-                    auto
-                    type="error"
-                    ghost
-                    px={0.6}
-                  >
-                    {/* Delete */}
-                  </Button>
-                  <Spacer inline w={0.5} />
-                  <Button
-                    icon={<SettingsIcon />}
-                    auto
-                    onClick={settingsModalStateHandler}
-                    type="secondary"
-                    ghost
-                    px={0.6}
-                  >
-                    {/* Settings */}
-                  </Button>
-                </div>
-              </div>
-              <Divider />
-              <Modal
-                visible={settingsModalVisible}
-                onClose={settingsModalCloseHandler}
-              >
-                <Modal.Title
-                  style={{
-                    justifyContent: "flex-start",
-                    textTransform: "unset",
-                  }}
-                >
-                  Editing <Spacer inline w={0.35} />
-                  <b>{cluster.cluster_name}</b>
-                </Modal.Title>
-                <Spacer h={0.35} />
-                {/* <Modal.Subtitle style={{ textAlign: "left" }}>
-                  This is a modal
-                </Modal.Subtitle> */}
-                <Modal.Content
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    paddingBottom: "0px",
-                  }}
-                >
-                  <Text small pb={"7px"}>
-                    Rename Cluster
-                  </Text>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Input
-                      icon={<TagIcon />}
-                      placeholder={cluster.cluster_name}
-                      width="100%"
-                      height="40px"
-                    />
-                    {/* <Spacer inline w={0.5} />
-                    <Button type="secondary" width="100px" mb={"4px"}>
-                      Rename
-                    </Button> */}
-                  </div>
-                  <Spacer h={0.5} />
-                  <Text small pb={"7px"}>
-                    Change Visibility
-                  </Text>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Spacer inline w={0.5} />
-                    <EyeIcon />
-                    <Spacer inline w={1} />
-                    <Select
-                      placeholder="Choose one"
-                      initialValue={cluster.public ? "1" : "2"}
-                      onChange={undefined}
-                      width="100%"
-                      height="40px"
-                      // icon={<EyeIcon />}
-                    >
-                      <Select.Option value="1">Public</Select.Option>
-                      <Select.Option value="2">Private</Select.Option>
-                    </Select>
-                  </div>
-                  <Spacer h={2} />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Grid.Container gap={1}>
-                      <Grid xs={12}>
-                        <Button icon={<XIcon />} width="100%" type="secondary">
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid xs={12}>
-                        <Button icon={<SaveIcon />} width="100%" type="success">
-                          Save
-                        </Button>
-                      </Grid>
-                    </Grid.Container>
-                  </div>
-                </Modal.Content>
-              </Modal>
-            </React.Fragment>
+            <ClustersListItem cluster={cluster} key={cluster.cluster_id} />
           );
         })}
       </div>
