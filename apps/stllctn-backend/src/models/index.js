@@ -8,6 +8,8 @@ const env = process.env.NODE_ENV || "development";
 const config = enVariables[env];
 const db = {};
 
+db.ROLES = ["User", "Admin"];
+
 const getSequelize = () => {
   // test environment
   if (process.env.NODE_ENV === "test") {
@@ -54,20 +56,20 @@ const sequelize = getSequelize();
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// tutorial stuff, to be removed
-db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
-db.User = require("./user.model")(sequelize, Sequelize);
-
 db.Cluster = require("./cluster.model")(sequelize, Sequelize);
 db.Star = require("./star.model")(sequelize, Sequelize);
 db.File = require("./file.model")(sequelize, Sequelize);
 db.StarText = require("./startext.model.js")(sequelize, Sequelize);
 db.StarImage = require("./starimage.model")(sequelize, Sequelize);
+db.User = require("./user.model")(sequelize, Sequelize);
+db.Role = require("./role.model")(sequelize, Sequelize);
 
 db.Cluster.associate(db);
 db.Star.associate(db);
 db.File.associate(db);
 db.StarImage.associate(db);
 db.StarText.associate(db);
+db.User.associate(db);
+db.Role.associate(db);
 
 module.exports = db;

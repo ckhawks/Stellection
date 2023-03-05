@@ -3,28 +3,29 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "User",
+      "User_Role",
       {
-        id: {
-          allowNull: false,
-          autoIncrement: true,
+        user_id: {
           primaryKey: true,
+          references: {
+            model: {
+              tableName: "User",
+            },
+            key: "user_id",
+          },
           type: Sequelize.INTEGER,
+          allowNull: false,
         },
-        username: {
-          type: Sequelize.STRING,
-        },
-        email: {
-          type: Sequelize.STRING,
-        },
-        password: {
-          type: Sequelize.STRING,
-        },
-        last_login_at: {
-          type: Sequelize.DATE,
-        },
-        last_ip_address: {
-          type: Sequelize.STRING,
+        role_id: {
+          primaryKey: true,
+          allowNull: false,
+          references: {
+            model: {
+              tableName: "Role",
+            },
+            key: "role_id",
+          },
+          type: Sequelize.INTEGER,
         },
         created_at: {
           allowNull: false,
@@ -38,11 +39,11 @@ module.exports = {
       {
         freezeTableName: true,
         underscored: true,
-        tableName: "User",
+        tableName: "User_Role",
       }
     );
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("User");
+    await queryInterface.dropTable("User_Role");
   },
 };

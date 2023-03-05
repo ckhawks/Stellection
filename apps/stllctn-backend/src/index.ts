@@ -25,7 +25,10 @@ import * as slug from "./utils/slug";
 // app.use(cors(corsOptions));
 
 // add cors
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5500" // todo probably going to be an issue when deploying to prod
+}
+app.use(cors(corsOptions));
 
 // enable files upload
 app.use(fileUpload({

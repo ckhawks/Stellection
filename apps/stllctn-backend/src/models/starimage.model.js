@@ -41,6 +41,7 @@ module.exports = (sequelize, Sequelize) => {
   StarImage.associate = (models) => {
     StarImage.belongsTo(models.Star, {
       foreignKey: "star_id",
+      // as: "star_image",
     });
     StarImage.hasOne(models.File, {
       foreignKey: "file_id",
