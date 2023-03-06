@@ -3,6 +3,8 @@ import { Image, Button, Tabs, Avatar, Popover, Spacer } from "@geist-ui/core";
 import { useLocation, Link, useNavigate } from "react-router-dom"; // NavLink, redirect
 import { LogOut as LogOutIcon, User as UserIcon } from "@geist-ui/icons";
 
+import { useAuth } from "../../contexts/AuthContext";
+
 import "./NavbarMenu.css";
 
 // research sass vs scss
@@ -15,7 +17,8 @@ const NavbarMenu = (props) => {
   const [url, setUrl] = useState(null);
   let navigate = useNavigate();
 
-  const loggedIn = true;
+  // const loggedIn = true;
+  const auth = useAuth();
 
   useEffect(() => {
     setUrl(location.pathname.substring(1));
@@ -33,32 +36,35 @@ const NavbarMenu = (props) => {
     navigate("/" + value);
   };
 
+  console.log("user", auth.user);
+
   const avatarPopoverContent = (
     <>
-      <div className="current-user-popover">
-        <Popover.Item width={"auto"}>
-          <UserIcon size={20} /> <Spacer inline w={0.35} />
-          Signed in as <Spacer inline w={0.25} />
-          <b>Stellaric</b>
-        </Popover.Item>
-        <Popover.Item line />
-        <Popover.Item>
-          <Link to="#">Your profile</Link>
-        </Popover.Item>
-        <Popover.Item>
-          <Link color to="#">
-            Settings
-          </Link>
-        </Popover.Item>
-        <Popover.Item>
-          <Link color to="#">
-            Admin settings
-          </Link>
-        </Popover.Item>
-        {/* <Popover.Item>
+      {auth.isLoggedIn && (
+        <div className="current-user-popover">
+          <Popover.Item width={"auto"}>
+            <UserIcon size={20} /> <Spacer inline w={0.35} />
+            Signed in as <Spacer inline w={0.25} />
+            <b>{auth.user.username}</b>
+          </Popover.Item>
+          <Popover.Item line />
+          <Popover.Item>
+            <Link to={"/user/" + auth.user.username}>Your profile</Link>
+          </Popover.Item>
+          <Popover.Item>
+            <Link color to="#">
+              Settings
+            </Link>
+          </Popover.Item>
+          <Popover.Item>
+            <Link color to="#">
+              Admin settings
+            </Link>
+          </Popover.Item>
+          {/* <Popover.Item>
                     <span>Command-Line</span>
                 </Popover.Item> */}
-        <Popover.Item line />
+          {/* <Popover.Item line />
         <Popover.Item>
           <Link to="/login">Temp: Login</Link>
         </Popover.Item>
@@ -66,40 +72,46 @@ const NavbarMenu = (props) => {
           <Link color to="/register">
             Temp: Register
           </Link>
-        </Popover.Item>
-        <Popover.Item line />
-        <Popover.Item>
-          <Link to="/logout">
+        </Popover.Item> */}
+          <Popover.Item line />
+          <Popover.Item
+            onClick={() => {
+              auth.logout();
+              navigate("/");
+            }}
+          >
+            {/* <Link> */}
             <LogOutIcon size={20} /> <Spacer inline w={0.35} />
             Logout
-          </Link>
-        </Popover.Item>
-        <style jsx>{`
-          .tooltip-content.popover > .inner {
-            padding-top: 7px;
-            padding-bottom: 7px;
-          }
+            {/* </Link> */}
+          </Popover.Item>
+          <style jsx>{`
+            .tooltip-content.popover > .inner {
+              padding-top: 7px;
+              padding-bottom: 7px;
+            }
 
-          .current-user-popover > .item > * {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            // white-space: nowrap;
-          }
+            .current-user-popover > .item > * {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              // white-space: nowrap;
+            }
 
-          .current-user-popover > .item {
-            white-space: nowrap;
-          }
+            .current-user-popover > .item {
+              white-space: nowrap;
+            }
 
-          .current-user-popover > .item:hover:not(.line) {
-            background-color: #e00;
-          }
+            .current-user-popover > .item:hover:not(.line) {
+              background-color: #e00;
+            }
 
-          .current-user-popover > .item:hover > a {
-            color: black;
-          }
-        `}</style>
-      </div>
+            .current-user-popover > .item:hover > a {
+              color: black;
+            }
+          `}</style>
+        </div>
+      )}
     </>
   );
 
@@ -130,7 +142,7 @@ const NavbarMenu = (props) => {
                 onChange={navTabsChangeHandler}
                 value={url}
               >
-                {/* <Tabs.Item label="Geist Test" value="geist-test" /> */}
+                <Tabs.Item label="Geist Test" value="geist-test" />
               </Tabs>
             </div>
             <div className="navbar-middle">
@@ -149,7 +161,7 @@ const NavbarMenu = (props) => {
             </div>
 
             <div className="navbar-right">
-              {!loggedIn && (
+              {!auth.isLoggedIn && (
                 <>
                   <Tabs
                     initialValue={url}
@@ -174,7 +186,7 @@ const NavbarMenu = (props) => {
                   </Link>
                 </>
               )}
-              {loggedIn && (
+              {auth.isLoggedIn && (
                 <>
                   <Tabs
                     initialValue={url}

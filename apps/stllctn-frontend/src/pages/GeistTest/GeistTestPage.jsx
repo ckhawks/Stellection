@@ -1,26 +1,28 @@
-import React, {  } from "react";
-import { Button } from '@geist-ui/react';
+import React from "react";
+import { Button, Text } from "@geist-ui/react";
 
-
-import './Geist-UI-Custom.css';
-
+import "./Geist-UI-Custom.css";
+import { useAuth } from "../../contexts/AuthContext";
 
 // https://github.com/manuanish/manuanish.github.io
 
 const GeistTestContainer = (props) => {
-    // const [ buttonLoading, setButtonLoading ] = useState(false);
+  // const [ buttonLoading, setButtonLoading ] = useState(false);
 
-    // const onButton1Click = () => {
-    //     setButtonLoading(!buttonLoading);
-    // }
+  // const onButton1Click = () => {
+  //     setButtonLoading(!buttonLoading);
+  // }
 
-    return (
-        <>
-            
-            <h2>Geist test lol</h2>
-            <Button type="secondary">button</Button>
-        
-            {/* <Page>
+  const auth = useAuth();
+
+  return (
+    <>
+      <h2>Geist test lol</h2>
+      <Button type="secondary">button</Button>
+      <Text>Token {auth.jwtToken}</Text>
+      <Text>User {auth.user && <span>{auth.user.username}</span>}</Text>
+
+      {/* <Page>
                 
                 <div class="menu-wrapper">
                     <nav class="menu">
@@ -72,8 +74,8 @@ const GeistTestContainer = (props) => {
                     <h3>Footer</h3>
                 </Page.Footer>
             </Page> */}
-        </>
-    );
-}
+    </>
+  );
+};
 
 export default GeistTestContainer;

@@ -1,4 +1,3 @@
-const verifySignUp = require("../middleware/verifySignUp");
 const auth = require("../controllers/auth.controller");
 
 const express = require("express");
@@ -19,13 +18,15 @@ router.use(function (req, res, next) {
 });
 
 // POST /api/auth/signup
-router.post(
-  "/signup",
-  [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-  auth.signup
-);
+router.post("/signup", auth.signup);
 
 // POST /api/auth/signin
 router.post("/signin", auth.signin);
+
+// POST /api/auth/verifytoken
+router.post("/verifytoken", auth.verifytoken);
+
+// POST /api/auth/signout
+router.post("/signout", auth.signout);
 
 module.exports = router;

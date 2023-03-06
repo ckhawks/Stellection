@@ -3,11 +3,15 @@ const express = require("express");
 const fileUpload = require('express-fileupload'); // Simple Express middleware for uploading files. It parses multipart/form-data requests, extracts the files if available, and makes them available under the req.files property.
 const cors = require("cors");
 const morgan = require('morgan'); // Node.js middleware for logging HTTP requests.
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 const PORT = process.env.PORT || 5500;
 
 const server = createServer(app);
+
+
 
 import { Request, Response } from "express";
 import { Model } from "sequelize";
@@ -26,9 +30,11 @@ import * as slug from "./utils/slug";
 
 // add cors
 const corsOptions = {
-  origin: "http://localhost:5500" // todo probably going to be an issue when deploying to prod
+  origin: "http://localhost:3500" // todo probably going to be an issue when deploying to prod
 }
 app.use(cors(corsOptions));
+
+app.use(cookieParser());
 
 // enable files upload
 app.use(fileUpload({

@@ -16,6 +16,7 @@ import NotFoundPage from "../pages/NotFound/NotFoundPage";
 import HomePage from "../pages/Home/HomePage";
 import GeistTestPage from "../pages/GeistTest/GeistTestPage";
 import LoginPage from "../pages/Authentication/LoginPage";
+import LogoutPage from "../pages/Authentication/LogoutPage";
 import RegisterPage from "../pages/Authentication/RegisterPage";
 import BrowsePage from "../pages/Browse/BrowsePage";
 import GalleryPage from "../pages/Gallery/GalleryPage";
@@ -101,6 +102,10 @@ const Router = () => {
               path="register"
               element={<Page title="Register" children={<RegisterPage />} />}
             />
+            {/* <Route
+              path="logout"
+              element={<Page title="Logout" children={<LogoutPage />} />}
+            /> */}
           </Route>
 
           <Route element={<BaseLayout wide />}>
